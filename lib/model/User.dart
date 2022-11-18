@@ -5,15 +5,15 @@ class User {
    String? name ,barcode,cost,sell,dose,mostSide,drugName,mechanism,pregnancy;
   User();
   User.map(dynamic opj){
-    this.name=opj["Name"];
-    this.barcode=opj["BarCode"];
-    this.cost=opj["Cost"];
-    this.sell=opj["Sell"];
+    name=opj["Name"];
+    barcode=opj["BarCode"];
+    cost=opj["Cost"];
+    sell=opj["Sell"];
     // this.id=opj["ID"];
-    this.dose=opj["dose"];
-    this.mostSide=opj['mostSide'];
-    this.drugName=opj['drugName'];
-    this.pregnancy=opj['pregnancy'];
+    dose=opj["dose"];
+    mostSide=opj['mostSide'];
+    drugName=opj['drugName'];
+    pregnancy=opj['pregnancy'];
   }
   Map< String , dynamic > map(){
     var map =  Map<String,dynamic>();

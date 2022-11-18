@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:scanner_qr_barcode/AddData.dart';
-import 'package:scanner_qr_barcode/Home.dart';
+import 'package:scanner_qr_barcode/ui/AddData.dart';
+import 'Home.dart';
 
 
 void main()  async {
-  runApp(  MyApp());
+  runApp(  const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -21,15 +21,15 @@ class _MyApp extends State<MyApp>{
   @override
   initState(){
     super.initState();
-     Home();
+     const Home();
   }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
 
       debugShowCheckedModeBanner: false,
-      home: Home(),
-      routes: {"AddData":(context) =>  AddData()},
+      home: const Home(),
+      routes: {"AddData":(context) =>  const AddData()},
 
     );
 

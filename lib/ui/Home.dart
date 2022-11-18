@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scanner_qr_barcode/ShowInformation.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
+
+import 'ShowInformation.dart';
 
 
 
@@ -52,10 +54,10 @@ class  _HomeState extends State<Home> {
         actions:  [
           IconButton(
               onPressed: () {
-                //
+
                 // Navigator.of(context).push(MaterialPageRoute(
                 //     builder: (context) => const QRViewExample())
-
+                Fluttertoast.showToast(msg: "التحديث قادم",toastLength: Toast.LENGTH_LONG);
               } ,
               icon: const Icon(
                 Icons.camera_alt_outlined,
@@ -94,10 +96,11 @@ class  _HomeState extends State<Home> {
                          return Card(
                              borderOnForeground: true,
                              child: ListTile(
-                               // leading:  const IconButton( onPressed:()  {
-                               //   print('Ali');
+                               // leading:  const IconButton(
+                               //   icon: Icon(Icons.edit),
+                               //   // onPressed: () {  },
                                //
-                               // }, icon: Icon(Icons.edit),),
+                               // ),
                                onTap: (){
                                  Navigator.of(context).push(
 

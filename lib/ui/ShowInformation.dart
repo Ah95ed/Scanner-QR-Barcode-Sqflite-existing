@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:scanner_qr_barcode/Home.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
+
+import 'Home.dart';
 
 class ShowInformation extends StatefulWidget {
 String?  name;
@@ -84,13 +85,13 @@ class _ShowInformation extends State<ShowInformation>{
       ),
       floatingActionButton: FloatingActionButton(onPressed: () async {
 
-         int responsed  = await  db.upDate("Ahmed", {
-           "Name" : "${name.text}",
-           "Barcode" : "${barcode.text}",
-           "Cost" : "${cost.text}",
-           "Sell" : "${sell.text}",
+         int response  = await  db.upDate("Ahmed", {
+           "Name" : name.text,
+           "Barcode" : barcode.text,
+           "Cost" : cost.text,
+           "Sell" : sell.text,
          }, "ID = ${widget.id}");
-         if(responsed > 0 ) {
+         if(response > 0 ) {
            Fluttertoast.showToast(msg: "تم التحديث",toastLength: Toast.LENGTH_LONG);
            Navigator.of(context).pushAndRemoveUntil(
                MaterialPageRoute(builder: (context) => const Home()),
