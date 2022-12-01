@@ -15,6 +15,7 @@ class _HomeState extends State<Home> {
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   String? code;
   bool isLoading = true;
+
   // User user = User();
   DataBaseHelper db = DataBaseHelper.dataBaseHelper;
 
@@ -23,6 +24,7 @@ class _HomeState extends State<Home> {
     // TODO: implement setState
     super.setState(fn);
   }
+
   @override
   void initState() {
     readData();
@@ -30,14 +32,13 @@ class _HomeState extends State<Home> {
   }
 
   List users = [];
+
   Future readData() async {
     List<Map> response = await db.readData("SELECT * FROM Ahmed");
     users.addAll(response);
     isLoading = false;
     if (mounted) {
-      setState(() {}
-
-      );
+      setState(() {});
     }
   }
 
@@ -52,7 +53,16 @@ class _HomeState extends State<Home> {
           'Scanner',
         ),
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+            //     onCode: (code){
+            //       setState(() {
+            //         Fluttertoast.showToast(msg: code.toString(),toastLength: Toast.LENGTH_LONG,fontSize: 32,gravity: ToastGravity.CENTER);
+            //       });
+            //     }
+            //
+            // );
+          },
           icon: const Icon(
             Icons.menu,
             size: 32.0,
@@ -64,12 +74,15 @@ class _HomeState extends State<Home> {
                 // Navigator.of(context).push(MaterialPageRoute(
                 //     builder: (context) => const QRViewExample())
 
-                _qrBarCodeScannerDialogPlugin.
-                getScannedQrBarCode(context: context,onCode:(code){
-
-                }
-                );
-
+                _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+                    context: context,
+                    onCode: (code) {
+                      Fluttertoast.showToast(
+                          msg: code.toString(),
+                          toastLength: Toast.LENGTH_LONG,
+                          fontSize: 32,
+                          gravity: ToastGravity.CENTER);
+                    });
               },
               icon: const Icon(
                 Icons.camera_alt_outlined,
@@ -134,7 +147,7 @@ class _HomeState extends State<Home> {
                             //  subtitle: Text('${users[i]['Sell']}'),
                             subtitle: Text(
                               " ${users[i]['Sell']}",
-                              style: const TextStyle(color: Colors.black),
+                              style: const TextStyle(),
                               //  style: const TextStyle(color: Colors.black),
                             ),
                           ),

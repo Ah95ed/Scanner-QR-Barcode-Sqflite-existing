@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scanner_qr_barcode/ui/AddData.dart';
-import 'Home.dart';
+import 'ui/Home.dart';
 
 void main() async {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.scannerCode.Alqdees.scanner_qr_barcode">
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+
    <application
         android:label="scanner_qr_barcode"
         android:name="${applicationName}"
