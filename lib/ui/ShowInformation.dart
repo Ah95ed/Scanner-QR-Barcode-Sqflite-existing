@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-
 import 'Home.dart';
 
 class ShowInformation extends StatefulWidget {
@@ -94,7 +93,7 @@ class _ShowInformation extends State<ShowInformation>{
          if(response > 0 ) {
            Fluttertoast.showToast(msg: "تم التحديث",toastLength: Toast.LENGTH_LONG);
            Navigator.of(context).pushAndRemoveUntil(
-               MaterialPageRoute(builder: (context) => const Home()),
+               MaterialPageRoute(builder: (context) =>  Home()),
                (route) => false);
          }
           },

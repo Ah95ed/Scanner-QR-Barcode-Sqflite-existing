@@ -1,166 +1,157 @@
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
-import 'ShowInformation.dart';
+import 'package:scanner_qr_barcode/Utils/provider.dart';
+import 'package:scanner_qr_barcode/ui/AddData.dart';
+import 'package:scanner_qr_barcode/ui/ShowInformation.dart';
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+import 'ReadQrBarcode.dart';
 
-  @override
-  State<Home> createState() => _HomeState();
-}
+class Home extends StatelessWidget {
 
-class _HomeState extends State<Home> {
-  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   String? code;
+
   bool isLoading = true;
 
+  Home({Key? key}) : super(key: key);
+
   // User user = User();
-  DataBaseHelper db = DataBaseHelper.dataBaseHelper;
-
-  @override
-  void setState(VoidCallback fn) {
-    // TODO: implement setState
-    super.setState(fn);
-  }
-
-  @override
-  void initState() {
-    readData();
-    super.initState();
-  }
-
-  List users = [];
-
-  Future readData() async {
-    List<Map> response = await db.readData("SELECT * FROM Ahmed");
-    users.addAll(response);
-    isLoading = false;
-    if (mounted) {
-      setState(() {});
-    }
-  }
+  // DataBaseHelper db = DataBaseHelper.dataBaseHelper;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 35.0,
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 150, 0, 72),
-        title: const Text(
-          'Scanner',
+    final DataBaseHelper db = DataBaseHelper.dataBaseHelper;
+    return ChangeNotifierProvider<MainProvider>(
+      create: (_) => MainProvider(),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 35.0,
+          centerTitle: true,
+          backgroundColor: const Color.fromARGB(255, 150, 0, 72),
+          title: const Text(
+            'Scanner',
+          ),
+          leading: IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.menu,
+              size: 32.0,
+            ),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+
+                        return const Dialog(
+                          child: QRViewExample() ,
+                        );
+
+                  });
+                  // Navigator.of(context).push(MaterialPageRoute(
+                  //     builder: (context) => const QRViewExample())
+                  // Provider.of<MainProvider>(context).openCamera(context);
+                },
+                icon: const Icon(
+                  Icons.camera_alt_outlined,
+                  size: 28.0,
+                )),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.search,
+                  size: 28.0,
+                )),
+          ],
         ),
-        leading: IconButton(
-          onPressed: () {
-            // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-            //     onCode: (code){
-            //       setState(() {
-            //         Fluttertoast.showToast(msg: code.toString(),toastLength: Toast.LENGTH_LONG,fontSize: 32,gravity: ToastGravity.CENTER);
-            //       });
-            //     }
-            //
-            // );
+        floatingActionButton: FloatingActionButton(
+          onPressed: ()  {
+            Navigator.of(context).push(MaterialPageRoute(builder:
+                (context){
+              return const AddData();
+            }));
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context){
+    //       const QRViewExample()
+    //     } )
+    //
           },
-          icon: const Icon(
-            Icons.menu,
+          tooltip: 'Add',
+          backgroundColor: const Color.fromARGB(255, 150, 0, 72),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
             size: 32.0,
           ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => const QRViewExample())
-
-                _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-                    context: context,
-                    onCode: (code) {
-                      Fluttertoast.showToast(
-                          msg: code.toString(),
-                          toastLength: Toast.LENGTH_LONG,
-                          fontSize: 32,
-                          gravity: ToastGravity.CENTER);
-                    });
-              },
-              icon: const Icon(
-                Icons.camera_alt_outlined,
-                size: 28.0,
-              )),
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                size: 28.0,
-              )),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Navigator.of(context).pushNamed("AddData");
-        },
-        tooltip: 'Add',
-        backgroundColor: const Color.fromARGB(255, 150, 0, 72),
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 32.0,
+        // body: isLoading == true
+        //     ? const Center(
+        //         child: Text(
+        //           'Loading ... ',
+        //           style: TextStyle(fontSize: 16.0, color: Colors.red),
+        //         ),
+        //       )
+        body: FutureBuilder(
+          future: Provider.of<MainProvider>(context, listen: false).selectData(),
+          builder: ((context, snapshot) {
+            Provider.of<MainProvider>(context).selectData();
+            if (snapshot.connectionState == ConnectionState.done) {
+              return Consumer<MainProvider>(
+                builder: ((context, mainProvider, child) {
+                  return mainProvider.todoItem.isNotEmpty
+                      ? ListView.builder(
+                    itemCount:  mainProvider.todoItem.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        elevation: 8,
+                        child: ListTile(
+                          title: Text(mainProvider.todoItem[index].name),
+                          subtitle: Text(
+                              mainProvider.todoItem[index].sell+"\n${mainProvider.todoItem[index].barcode}"),
+                          onTap: (){
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                              return ShowInformation(
+                                name: mainProvider.todoItem[index].name,
+                                barcode: mainProvider.todoItem[index].barcode,
+                                sell: mainProvider.todoItem[index].sell,
+                                id: mainProvider.todoItem[index].id,
+                              cost:mainProvider.todoItem[index].cost ,
+                              );
+                            }));
+                          },
+                        ),
+                      );
+                    },
+                  ): const Center(
+                    child: Text(
+                      'Empty',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontSize: 28,
+                      ),
+                    ),
+                  );
+                }),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.amber,
+                  color: Colors.black,
+                  strokeWidth: 2,
+                ),
+              );
+            }
+          }),
         ),
       ),
-      body: isLoading == true
-          ? const Center(
-              child: Text(
-                'Loading ... ',
-                style: TextStyle(fontSize: 16.0, color: Colors.red),
-              ),
-            )
-          : Center(
-              child: ListView(
-                children: [
-                  ListView.builder(
-                      itemCount: users.length,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (context, i) {
-                        return Card(
-                          borderOnForeground: true,
-                          child: ListTile(
-                            // leading:  const IconButton(
-                            //   icon: Icon(Icons.edit),
-                            //   // onPressed: () {  },
-                            //
-                            // ),
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => ShowInformation(
-                                        name: users[i]['Name'],
-                                        barcode: users[i]['Barcode'],
-                                        cost: users[i]['Cost'],
-                                        sell: users[i]['Sell'],
-                                        id: "${users[i]['ID']}",
-                                      )));
-                            },
-                            title: Text(
-                              "${users[i]['Name']}\n${users[i]["Cost"]}",
-                            ),
-                            //  subtitle: Text('${users[i]['Sell']}'),
-                            subtitle: Text(
-                              " ${users[i]['Sell']}",
-                              style: const TextStyle(),
-                              //  style: const TextStyle(color: Colors.black),
-                            ),
-                          ),
-                          shape: Border.all(
-                              // color: ,
-                              color: const Color.fromARGB(255, 150, 0, 72)),
-                          shadowColor: const Color.fromARGB(255, 150, 0, 72),
-                          elevation: 4.0,
-                        );
-                      }),
-                ],
-              ),
-            ),
     );
   }
 }
+
+
+
