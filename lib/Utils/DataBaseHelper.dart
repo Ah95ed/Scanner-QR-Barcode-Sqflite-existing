@@ -13,7 +13,7 @@ class DataBaseHelper {
   static const TableName = 'Ahmed';
   static const id = 'ID';
   static const Name = 'Name';
-  static const BarCode = 'BarCode';
+  static const BarCode = 'Barcode';
   static const Cost = 'Cost';
   static const Sell = 'Sell';
   DataBaseHelper._privateConstructor();
@@ -58,13 +58,14 @@ class DataBaseHelper {
   }
 
 //SelectAll
- static Future<List<Map<String, dynamic>?>?>
- getAllUser(String tableName) async {
+  static Future<List<Map<String, dynamic>?>?> getAllUser(
+      String tableName) async {
     Database? db = await DataBaseHelper.initDataBase();
     var result = await db.query(tableName);
-    db.close();
+    // db.close();
     return result.toList();
   }
+
 //   static Future<List<Map<String, dynamic>?>?>
 //   getAllUser(String table) async {
 //
@@ -74,6 +75,7 @@ class DataBaseHelper {
   readData(String sql) async {
     Database? db = await database;
     List<Map> response = await db!.rawQuery(sql);
+    // db.close();
     return response;
   }
 
@@ -81,6 +83,7 @@ class DataBaseHelper {
     Database? db = await database;
     return db!.query(TableName);
   }
+
 // counts
 // Future<int?> getCount() async{
 //   var db = await dataBaseHelper.database;
@@ -90,6 +93,7 @@ class DataBaseHelper {
   upDate(String table, Map<String, Object?> values, String? myWhere) async {
     Database? db = await dataBaseHelper.database;
     int response = await db!.update(table, values, where: myWhere);
+    // db.close();
     return response;
   }
 

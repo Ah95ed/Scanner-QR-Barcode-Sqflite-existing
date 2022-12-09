@@ -38,7 +38,7 @@ class _AddData extends State<AddData> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           int? response = await db.insert('''
-          INSERT INTO Ahmed (`Name`,`BarCode`,`Cost`,`Sell`,`dose`,`mostSide`,`drugName`,`mechanism`,`pregnancy`) VALUES
+          INSERT INTO Ahmed (`Name`,`BarCode`,`Cost`,`Sell`) VALUES
            ("${name.text}","${barcode.text}",
           "${cost.text}","${sell.text}")
           ''');
@@ -47,6 +47,8 @@ class _AddData extends State<AddData> {
                 msg: " ${name.text}تمت اَضافة ",
                 gravity: ToastGravity.CENTER,
                 toastLength: Toast.LENGTH_SHORT);
+          }else{
+
           }
         },
         tooltip: 'Add',
@@ -79,6 +81,7 @@ class _AddData extends State<AddData> {
               TextField(
                 "sell",
                 controller: sell,
+                
               ),
             ],
           ))
