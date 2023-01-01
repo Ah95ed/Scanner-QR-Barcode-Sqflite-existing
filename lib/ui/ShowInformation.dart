@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/provider.dart';
-import 'Home.dart';
 
-class ShowInformation extends StatelessWidget {
+class ShowInformation extends StatefulWidget {
   String named;
   String barcoded;
   String costd;
@@ -21,18 +21,47 @@ class ShowInformation extends StatelessWidget {
     required this.idd,
   }) : super(key: key);
 
+  @override
+  State<ShowInformation> createState() => _ShowInformationState();
+}
+
+class _ShowInformationState extends State<ShowInformation> {
   GlobalKey<FormState> formState = GlobalKey();
+
   TextEditingController name = TextEditingController();
+
   TextEditingController barcode = TextEditingController();
+
   TextEditingController cost = TextEditingController();
+
   TextEditingController sell = TextEditingController();
+
   DataBaseHelper db = DataBaseHelper.dataBaseHelper;
+  late String _id ;
+  @override
+  void initState() {
+    name.text = widget.named;
+    barcode.text = widget.barcoded;
+    cost.text = widget.costd;
+    sell.text = widget.selld;
+    _id = widget.idd ;
+    super.initState();
+  }
+  @override
+  void dispose() {
+    name.dispose();
+    barcode.dispose();
+    cost.dispose();
+    sell.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-   /*
+    /*
    needed StatelessWidget
    */
+    final provider = Provider.of<MainProvider>(context,listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
@@ -79,30 +108,15 @@ class ShowInformation extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Provider.of<MainProvider>(context).updateData(
-            name,
-            barcode,
-            cost,
-            sell,
-            idd,
-            context,
-          );
-          // int response = await db.upDate(
-          //     "Ahmed",
-          //     {
-          //       "Name": name.text,
-          //       "Barcode": barcode.text,
-          //       "Cost": cost.text,
-          //       "Sell": sell.text,
-          //     },
-          //     "ID = $idd");
-          // if (response > 0) {
-          //   Fluttertoast.showToast(
-          //       msg: "تم التحديث", toastLength: Toast.LENGTH_LONG);
-          //   Navigator.of(context).pushAndRemoveUntil(
-          //       MaterialPageRoute(builder: (context) => Home()),
-          //       (route) => false);
-          // }
+          await provider.updateName(name.text, _id );
+          await provider.updateBarCode(barcode.text,_id);
+          await provider.updateCost(cost.text, _id);
+          await provider.updateSell(sell.text, _id);
+          // Fluttertoast.showToast(msg: name.text,toastLength: Toast.LENGTH_SHORT,
+          //
+          // fontSize: 16.0,gravity: ToastGravity.BOTTOM,backgroundColor: Colors.amber
+          // );
+          Navigator.pop(context);
         },
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
         tooltip: 'Add And UpDate',

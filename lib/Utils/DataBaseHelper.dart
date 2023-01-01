@@ -1,7 +1,6 @@
-import 'dart:async';
+
 import 'dart:core';
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:sqflite/sqflite.dart';
@@ -84,22 +83,17 @@ class DataBaseHelper {
     return db!.query(TableName);
   }
 
-// counts
-// Future<int?> getCount() async{
-//   var db = await dataBaseHelper.database;
-//   return Sqflite.firstIntValue(await db?.rawQuery('SELECT COUNT(ID) FROM $TableName'));
-// }
-// update
-  upDate(String table, Map<String, Object?> values, String? myWhere) async {
-    Database? db = await dataBaseHelper.database;
-    int response = await db!.update(table, values, where: myWhere);
-    // db.close();
-    return response;
+
+
+  static Future update(String Table, String Column, String valus, String id,) async {
+    final db = await DataBaseHelper.initDataBase();
+    return await db.update(Table, {Column: valus}, where: 'ID = ?', whereArgs: [id]);
   }
+
 
   List<Map> Data() {
     Database db = dataBaseHelper.database as Database;
-    List<Map>? response = db.rawQuery("SELECT * FROM ahmed") as List<Map>?;
+    List<Map>? response = db.rawQuery("SELECT * FROM Ahmed") as List<Map>?;
     return response!;
   }
 
