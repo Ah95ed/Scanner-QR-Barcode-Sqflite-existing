@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/Utils/provider.dart';
-import 'package:scanner_qr_barcode/ui/AddData.dart';
-import 'package:scanner_qr_barcode/ui/ShowInformation.dart';
-import 'package:scanner_qr_barcode/ui/screen_Calc.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
+import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
+import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
+// import 'package:scanner_qr_barcode/ui/pages/screen_Calc.dart';
+import 'AddData.dart';
 
+// ignore: must_be_immutable
 class Home extends StatelessWidget {
-  // String? code;
+  String? code;
+  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
   bool isLoading = true;
 
@@ -19,7 +21,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DataBaseHelper db = DataBaseHelper.dataBaseHelper;
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider<MainProvider>(
@@ -37,8 +38,8 @@ class Home extends StatelessWidget {
           ),
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => const Calcolator())));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: ((context) => const Calcolator()),),;
             },
             icon: const Icon(
               Icons.menu,
@@ -49,27 +50,7 @@ class Home extends StatelessWidget {
             IconButton(
                 onPressed: () async {
                   Provider.of<MainProvider>(context, listen: false)
-                      .openCamera();
-                      
-
-                  // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(context: context,onCode: (code){
-                  //   Fluttertoast.showToast(msg: code,toastLength: Toast.LENGTH_SHORT,
-                  //             fontSize: 16.0,gravity: ToastGravity.BOTTOM,backgroundColor: Colors.amber,
-                  //           textColor: Colors.black
-                  //         );
-                  //
-                  // });
-
-                  // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-                  //     context: context,
-                  //     onCode: (code) {
-                  //       this.code =code;
-                  //       Fluttertoast.showToast(msg: this.code.toString(),toastLength: Toast.LENGTH_SHORT,
-                  //
-                  //           fontSize: 16.0,gravity: ToastGravity.BOTTOM,backgroundColor: Colors.amber,
-                  //         textColor: Colors.black
-                  //       );
-                  //     });
+                      .openCamera(context);
                 },
                 icon: const Icon(
                   Icons.camera_alt_outlined,
@@ -225,15 +206,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-// Widget? openCamera () async {
-//    String barcodeScanRes;
-   
-//                   // Platform messages may fail, so we use a try/catch PlatformException.
-//                   // try {
-//                   //   barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-//                   //       '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-//                   //   print(barcodeScanRes);
-//                   // } on PlatformException {
-//                   //   barcodeScanRes = 'Failed to get platform version.';
-//                   // }
-// }

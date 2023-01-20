@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:provider/provider.dart';
-import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/Utils/provider.dart';
+import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
+import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
 class ShowInformation extends StatefulWidget {
   String named;
@@ -37,16 +37,17 @@ class _ShowInformationState extends State<ShowInformation> {
   TextEditingController sell = TextEditingController();
 
   DataBaseHelper db = DataBaseHelper.dataBaseHelper;
-  late String _id ;
+  late String _id;
   @override
   void initState() {
     name.text = widget.named;
     barcode.text = widget.barcoded;
     cost.text = widget.costd;
     sell.text = widget.selld;
-    _id = widget.idd ;
+    _id = widget.idd;
     super.initState();
   }
+
   @override
   void dispose() {
     name.dispose();
@@ -61,7 +62,7 @@ class _ShowInformationState extends State<ShowInformation> {
     /*
    needed StatelessWidget
    */
-    final provider = Provider.of<MainProvider>(context,listen: false);
+    final provider = Provider.of<MainProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
@@ -108,8 +109,8 @@ class _ShowInformationState extends State<ShowInformation> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await provider.updateName(name.text, _id );
-          await provider.updateBarCode(barcode.text,_id);
+          await provider.updateName(name.text, _id);
+          await provider.updateBarCode(barcode.text, _id);
           await provider.updateCost(cost.text, _id);
           await provider.updateSell(sell.text, _id);
           // Fluttertoast.showToast(msg: name.text,toastLength: Toast.LENGTH_SHORT,

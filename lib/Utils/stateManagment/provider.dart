@@ -1,17 +1,15 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/model/User.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 
+import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
+import 'package:scanner_qr_barcode/model/User.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
   String? barcodeScanRes;
   String? code;
-
+  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   Future<void> selectData() async {
     final dataList = await DataBaseHelper.getAllUser(DataBaseHelper.TableName);
     todoItem = dataList!
@@ -30,20 +28,24 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> openCamera() async {
+  Future<void> openCamera(BuildContext context) async {
+    // try {
+    //   barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+    //       '#ff6666', 'اللغاء', true, ScanMode.BARCODE);
 
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'اللغاء', true, ScanMode.BARCODE);
- 
-        print(barcodeScanRes);
-      
+    //     print(barcodeScanRes);
 
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
+    // } on PlatformException {
+    //   barcodeScanRes = 'Failed to get platform version.';
+    // }
+    _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+        context: context,
+        onCode: (code) {
+          barcodeScanRes = code.toString();
+        });
     notifyListeners();
   }
+
   Future updateName(String name, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
@@ -53,6 +55,7 @@ class MainProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
+
   Future updateBarCode(String Barcode, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
@@ -62,6 +65,7 @@ class MainProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
+
   Future updateCost(String Cost, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
@@ -71,6 +75,7 @@ class MainProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
+
   Future updateSell(String Sell, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,

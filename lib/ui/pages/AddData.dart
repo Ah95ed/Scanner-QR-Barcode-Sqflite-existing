@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:scanner_qr_barcode/Utils/DataBaseHelper.dart';
+import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 
 class AddData extends StatefulWidget {
   const AddData({Key? key}) : super(key: key);
@@ -16,11 +16,7 @@ class _AddData extends State<AddData> {
   TextEditingController barcode = TextEditingController();
   TextEditingController cost = TextEditingController();
   TextEditingController sell = TextEditingController();
-  // TextEditingController dose = TextEditingController();
-  // TextEditingController mostSide = TextEditingController();
-  // TextEditingController drugName = TextEditingController();
-  // TextEditingController mechanism = TextEditingController();
-  // TextEditingController pregnancy = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
