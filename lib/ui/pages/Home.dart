@@ -1,26 +1,46 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
-// import 'package:scanner_qr_barcode/ui/pages/screen_Calc.dart';
 import 'AddData.dart';
 
 // ignore: must_be_immutable
-class Home extends StatelessWidget {
-  String? code;
-  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
+class Home extends StatefulWidget {
+  // String? code;
+  // final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
-  bool isLoading = true;
+  // bool isLoading = true;
+
+
 
   Home({Key? key}) : super(key: key);
 
-  // User user = User();
-  // DataBaseHelper db = DataBaseHelper.dataBaseHelper;
+  @override
+  State<Home> createState() => _HomeState();
 
+}
+
+class _HomeState extends State<Home> {
+
+  int skip=0;
+  int limit=20;
+
+  Future<void> getData(BuildContext context)async {
+    await Provider.of<MainProvider>(context, listen: false).selectData(skip,limit);
+    skip = skip + limit;
+  }
+  @override
+  void initState() {
+    getData(context);
+
+    super.initState();
+  }
+  // User user = User();
   @override
   Widget build(BuildContext context) {
+    ScrollController controller = ScrollController();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider<MainProvider>(
@@ -66,15 +86,20 @@ class Home extends StatelessWidget {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return const AddData();
-            }));
+            // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            //   return const AddData();
+            // }));
             // Navigator.of(context).push(MaterialPageRoute(
             //     builder: (context){
             //       const QRViewExample()
             //     } )
             //
-          },
+
+          setState(() {
+            getData(context);
+            print("ahmred$skip");
+          });
+            },
           tooltip: 'Add',
           backgroundColor: const Color.fromARGB(255, 150, 0, 72),
           child: const Icon(
@@ -91,15 +116,17 @@ class Home extends StatelessWidget {
         //         ),
         //       )
         body: FutureBuilder(
-          future:
-              Provider.of<MainProvider>(context, listen: false).selectData(),
+          future: getData(context),
           builder: ((context, snapshot) {
-            Provider.of<MainProvider>(context).selectData();
+
+            getData(context);
             if (snapshot.connectionState == ConnectionState.done) {
               return Consumer<MainProvider>(
                 builder: ((context, mainProvider, child) {
                   return mainProvider.todoItem.isNotEmpty
                       ? ListView.builder(
+
+                    controller: controller,
                           itemCount: mainProvider.todoItem.length,
                           itemBuilder: (context, index) {
                             return Dismissible(
@@ -108,11 +135,7 @@ class Home extends StatelessWidget {
                                   alignment: Alignment.centerRight,
                                   margin: EdgeInsets.all(width * 0.01),
                                   padding: EdgeInsets.all(width * 0.03),
-                                  // decoration: BoxDecoration(
-                                  //   color: Colors.green,
-                                  //   borderRadius:
-                                  //       BorderRadius.circular(width * 0.03),
-                                  // ),
+
                                   color: Colors.green,
                                   height: height * 0.02,
                                   width: width,
@@ -132,7 +155,7 @@ class Home extends StatelessWidget {
                                       idd: mainProvider.todoItem[index].id,
                                       costd: mainProvider.todoItem[index].cost,
                                     );
-                                  }));
+                                  },),);
                                 } else if (di == DismissDirection.startToEnd) {
                                   Fluttertoast.showToast(
                                       msg: mainProvider.todoItem[index].id,
@@ -140,41 +163,23 @@ class Home extends StatelessWidget {
                                       fontSize: 16.0,
                                       gravity: ToastGravity.BOTTOM,
                                       backgroundColor: Colors.amber);
-                                  // showDialog(
-                                  //   context: context,
-                                  //   builder: ((context) => Qr()),
-                                  //   useSafeArea: true,
-                                  //
-                                  //   //  ((context) => const AlertDialog(
-                                  //   //       title: Text('Delete'),
-                                  //   //     )),
-                                  // );
                                 }
+                                return null;
                               },
                               child: Card(
                                 elevation: 8,
                                 child: ListTile(
                                   title:
-                                      Text(mainProvider.todoItem[index].name),
+                                      Text(mainProvider.todoItem[index].name,
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 16),
+                                      ),
                                   subtitle:
-                                      Text(mainProvider.todoItem[index].sell),
+                                      Text(mainProvider.todoItem[index].sell,
+                                        style: const TextStyle(color: Colors.black,fontSize: 16),
+                                      ),
 
-                                  // onTap: () {
-                                  //   Navigator.of(context).push(
-                                  //       MaterialPageRoute(builder: (context) {
-                                  //     return ShowInformation(
-                                  //       named:
-                                  //           mainProvider.todoItem[index].name,
-                                  //       barcoded: mainProvider
-                                  //           .todoItem[index].barcode,
-                                  //       selld:
-                                  //           mainProvider.todoItem[index].sell,
-                                  //       idd: mainProvider.todoItem[index].id,
-                                  //       costd:
-                                  //           mainProvider.todoItem[index].cost,
-                                  //     );
-                                  //   }));
-                                  // },
                                 ),
                               ),
                             );
@@ -205,4 +210,6 @@ class Home extends StatelessWidget {
       ),
     );
   }
+
 }
+

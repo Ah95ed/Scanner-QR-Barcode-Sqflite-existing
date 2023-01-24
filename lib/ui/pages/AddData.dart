@@ -28,7 +28,9 @@ class _AddData extends State<AddData> {
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.camera_alt_outlined)),
+            onPressed: () {},
+            icon: const Icon(Icons.camera_alt_outlined),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -43,9 +45,7 @@ class _AddData extends State<AddData> {
                 msg: " ${name.text}تمت اَضافة ",
                 gravity: ToastGravity.CENTER,
                 toastLength: Toast.LENGTH_SHORT);
-          }else{
-
-          }
+          } else {}
         },
         tooltip: 'Add',
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
@@ -77,7 +77,6 @@ class _AddData extends State<AddData> {
               TextField(
                 "sell",
                 controller: sell,
-                
               ),
             ],
           ))

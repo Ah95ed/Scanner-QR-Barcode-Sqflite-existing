@@ -58,11 +58,17 @@ class DataBaseHelper {
 
 //SelectAll
   static Future<List<Map<String, dynamic>?>?> getAllUser(
-      String tableName) async {
+      String tableName,String skip,String limit) async {
     Database? db = await DataBaseHelper.initDataBase();
-    var result = await db.query(tableName);
+    var result  = await db.rawQuery('SELECT * FROM $TableName  WHERE ID >= $skip ORDER BY Name LIMIT $limit');
+    // SELECT *
+    //     FROM MyTable
+    // WHERE (SomeColumn, OtherColumn) > (LastSome, LastOther)
+    // ORDER BY SomeColumn, OtherColumn
+    // LIMIT 100;
+    // var result = await db.query(tableName);
+      return result.toList();
     // db.close();
-    return result.toList();
   }
 
 //   static Future<List<Map<String, dynamic>?>?>
