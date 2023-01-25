@@ -9,9 +9,11 @@ class MainProvider extends ChangeNotifier {
   String? barcodeScanRes;
   String? code;
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
-  Future<String?> selectData(int skip,int limit) async {
-
-    final dataList = await DataBaseHelper.getAllUser(DataBaseHelper.TableName,skip.toString(),limit.toString());
+  Future<String?> selectData() async {
+    int skip = 0;
+    int limit = 20;
+    final dataList =
+        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
     todoItem = dataList!
         .map((items) => User(
               name: items!['Name'].toString(),
@@ -21,13 +23,9 @@ class MainProvider extends ChangeNotifier {
               id: items['ID'].toString(),
             ))
         .toList();
-    // Fluttertoast.showToast(
-    //     msg: dataList.first.toString(),
-    //     gravity: ToastGravity.CENTER,
-    //     toastLength: Toast.LENGTH_SHORT);
-    // skip = skip + limit;
+    skip = skip + limit;
+
     notifyListeners();
-    return null;
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -58,34 +56,46 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future updateBarCode(String Barcode, String id) async {
+  Future updateBarCode(String barcode, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
       DataBaseHelper.BarCode,
-      Barcode,
+      barcode,
       id,
     );
     notifyListeners();
   }
 
-  Future updateCost(String Cost, String id) async {
+  Future updateCost(String cost, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
       DataBaseHelper.Cost,
-      Cost,
+      cost,
       id,
     );
     notifyListeners();
   }
 
-  Future updateSell(String Sell, String id) async {
+  Future updateSell(String sell, String id) async {
     await DataBaseHelper.update(
       DataBaseHelper.TableName,
       DataBaseHelper.Sell,
-      Sell,
+      sell,
       id,
     );
     notifyListeners();
   }
 
+  void loadData() async {
+    int skip = 0;
+    int limit = 20;
+    final data =
+        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
+    if (data == null) {
+      return;
+    } else {
+      skip = skip + limit;
+    }
+    notifyListeners();
+  }
 }

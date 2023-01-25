@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/Home.dart';
 
-
 void main() async {
   runApp(const MyApp());
 }
@@ -19,10 +18,10 @@ class MyApp extends StatelessWidget {
           create: ((context) => MainProvider()),
         )
       ],
-      builder: ((context, child) =>  MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Home(),
-      )),
+      builder: ((context, child) => const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: Home(),
+          )),
     );
   }
 }

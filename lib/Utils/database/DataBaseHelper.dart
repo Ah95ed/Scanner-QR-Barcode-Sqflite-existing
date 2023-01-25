@@ -1,4 +1,3 @@
-
 import 'dart:core';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
@@ -58,16 +57,17 @@ class DataBaseHelper {
 
 //SelectAll
   static Future<List<Map<String, dynamic>?>?> getAllUser(
-      String tableName,String skip,String limit) async {
+      String skip, String limit) async {
     Database? db = await DataBaseHelper.initDataBase();
-    var result  = await db.rawQuery('SELECT * FROM $TableName  WHERE ID >= $skip ORDER BY Name LIMIT $limit');
+    var result = await db.rawQuery(
+        'SELECT * FROM $TableName  WHERE ID > $skip ORDER BY ID LIMIT $limit');
     // SELECT *
     //     FROM MyTable
     // WHERE (SomeColumn, OtherColumn) > (LastSome, LastOther)
     // ORDER BY SomeColumn, OtherColumn
     // LIMIT 100;
     // var result = await db.query(tableName);
-      return result.toList();
+    return result.toList();
     // db.close();
   }
 
@@ -89,13 +89,16 @@ class DataBaseHelper {
     return db!.query(TableName);
   }
 
-
-
-  static Future update(String Table, String Column, String valus, String id,) async {
+  static Future update(
+    String Table,
+    String Column,
+    String valus,
+    String id,
+  ) async {
     final db = await DataBaseHelper.initDataBase();
-    return await db.update(Table, {Column: valus}, where: 'ID = ?', whereArgs: [id]);
+    return await db.update(Table, {Column: valus},
+        where: 'ID = ?', whereArgs: [id]);
   }
-
 
   List<Map> Data() {
     Database db = dataBaseHelper.database as Database;

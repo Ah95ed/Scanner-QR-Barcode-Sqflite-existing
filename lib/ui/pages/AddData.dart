@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
+import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
-class AddData extends StatefulWidget {
-  const AddData({Key? key}) : super(key: key);
+class AddData extends StatelessWidget {
+  AddData({Key? key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() => _AddData();
-}
-
-class _AddData extends State<AddData> {
   DataBaseHelper db = DataBaseHelper.dataBaseHelper;
   GlobalKey<FormState> formState = GlobalKey();
   TextEditingController name = TextEditingController();
@@ -28,7 +25,10 @@ class _AddData extends State<AddData> {
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Provider.of<MainProvider>(context, listen: false)
+                  .openCamera(context);
+            },
             icon: const Icon(Icons.camera_alt_outlined),
           ),
         ],

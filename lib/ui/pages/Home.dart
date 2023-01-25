@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -6,38 +6,24 @@ import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
 import 'AddData.dart';
 
-// ignore: must_be_immutable
 class Home extends StatefulWidget {
-  // String? code;
-  // final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
-
-  // bool isLoading = true;
-
-
-
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
-
 }
 
 class _HomeState extends State<Home> {
-
-  int skip=0;
-  int limit=20;
-
-  Future<void> getData(BuildContext context)async {
-    await Provider.of<MainProvider>(context, listen: false).selectData(skip,limit);
-    skip = skip + limit;
+  List addData = [];
+  Future<void> getData(BuildContext context) async {
+    Provider.of<MainProvider>(context, listen: false).selectData();
   }
-  @override
-  void initState() {
-    getData(context);
 
-    super.initState();
+  List add_data(BuildContext context) {
+    addData.addAll(Provider.of<MainProvider>(context, listen: false).todoItem);
+    return addData;
   }
-  // User user = User();
+
   @override
   Widget build(BuildContext context) {
     ScrollController controller = ScrollController();
@@ -68,14 +54,15 @@ class _HomeState extends State<Home> {
           ),
           actions: [
             IconButton(
-                onPressed: () async {
-                  Provider.of<MainProvider>(context, listen: false)
-                      .openCamera(context);
-                },
-                icon: const Icon(
-                  Icons.camera_alt_outlined,
-                  size: 28.0,
-                )),
+              onPressed: () async {
+                Provider.of<MainProvider>(context, listen: false)
+                    .openCamera(context);
+              },
+              icon: const Icon(
+                Icons.camera_alt_outlined,
+                size: 28.0,
+              ),
+            ),
             IconButton(
                 onPressed: () {},
                 icon: const Icon(
@@ -86,20 +73,17 @@ class _HomeState extends State<Home> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            //   return const AddData();
-            // }));
-            // Navigator.of(context).push(MaterialPageRoute(
-            //     builder: (context){
-            //       const QRViewExample()
-            //     } )
-            //
-
-          setState(() {
-            getData(context);
-            print("ahmred$skip");
-          });
-            },
+            setState(() {
+              add_data(context);
+            });
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) {
+            //       return AddData();
+            //     },
+            //   ),
+            // );
+          },
           tooltip: 'Add',
           backgroundColor: const Color.fromARGB(255, 150, 0, 72),
           child: const Icon(
@@ -118,44 +102,49 @@ class _HomeState extends State<Home> {
         body: FutureBuilder(
           future: getData(context),
           builder: ((context, snapshot) {
-
             getData(context);
             if (snapshot.connectionState == ConnectionState.done) {
               return Consumer<MainProvider>(
                 builder: ((context, mainProvider, child) {
                   return mainProvider.todoItem.isNotEmpty
                       ? ListView.builder(
-
-                    controller: controller,
-                          itemCount: mainProvider.todoItem.length,
+                          controller: controller,
+                          itemCount: add_data(context)
+                              .length /* mainProvider.todoItem.length*/,
                           itemBuilder: (context, index) {
                             return Dismissible(
                               key: ValueKey(mainProvider.todoItem[index].id),
                               background: Container(
-                                  alignment: Alignment.centerRight,
-                                  margin: EdgeInsets.all(width * 0.01),
-                                  padding: EdgeInsets.all(width * 0.03),
-
-                                  color: Colors.green,
-                                  height: height * 0.02,
-                                  width: width,
-                                  child: const Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  )),
+                                alignment: Alignment.centerRight,
+                                margin: EdgeInsets.all(width * 0.01),
+                                padding: EdgeInsets.all(width * 0.03),
+                                color: Colors.green,
+                                height: height * 0.02,
+                                width: width,
+                                child: const Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
                               confirmDismiss: (DismissDirection di) async {
                                 if (di == DismissDirection.endToStart) {
                                   return await Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (context) {
-                                    return ShowInformation(
-                                      named: mainProvider.todoItem[index].name,
-                                      barcoded:
-                                          mainProvider.todoItem[index].barcode,
-                                      selld: mainProvider.todoItem[index].sell,
-                                      idd: mainProvider.todoItem[index].id,
-                                      costd: mainProvider.todoItem[index].cost,
-                                    );
-                                  },),);
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ShowInformation(
+                                          named:
+                                              mainProvider.todoItem[index].name,
+                                          barcoded: mainProvider
+                                              .todoItem[index].barcode,
+                                          selld:
+                                              mainProvider.todoItem[index].sell,
+                                          idd: mainProvider.todoItem[index].id,
+                                          costd:
+                                              mainProvider.todoItem[index].cost,
+                                        );
+                                      },
+                                    ),
+                                  );
                                 } else if (di == DismissDirection.startToEnd) {
                                   Fluttertoast.showToast(
                                       msg: mainProvider.todoItem[index].id,
@@ -169,17 +158,16 @@ class _HomeState extends State<Home> {
                               child: Card(
                                 elevation: 8,
                                 child: ListTile(
-                                  title:
-                                      Text(mainProvider.todoItem[index].name,
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 16),
-                                      ),
-                                  subtitle:
-                                      Text(mainProvider.todoItem[index].sell,
-                                        style: const TextStyle(color: Colors.black,fontSize: 16),
-                                      ),
-
+                                  title: Text(
+                                    mainProvider.todoItem[index].name,
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 16),
+                                  ),
+                                  subtitle: Text(
+                                    mainProvider.todoItem[index].sell,
+                                    style: const TextStyle(
+                                        color: Colors.black, fontSize: 16),
+                                  ),
                                 ),
                               ),
                             );
@@ -210,6 +198,4 @@ class _HomeState extends State<Home> {
       ),
     );
   }
-
 }
-
