@@ -1,6 +1,4 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
@@ -140,6 +138,9 @@ class Home extends StatelessWidget {
                                           TextButton(
                                             child: const Text('yes'),
                                             onPressed: () {
+                                              context.read<MainProvider>().deleteData(
+                                                    mainProvider.todoItem[index].id,
+                                                  );
                                               Navigator.of(context).pop();
                                             },
                                           ),
