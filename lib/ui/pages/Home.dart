@@ -6,23 +6,8 @@ import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
 import 'AddData.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  List addData = [];
-  Future<void> getData(BuildContext context) async {
-    Provider.of<MainProvider>(context, listen: false).selectData();
-  }
-
-  List add_data(BuildContext context) {
-    addData.addAll(Provider.of<MainProvider>(context, listen: false).todoItem);
-    return addData;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +25,7 @@ class _HomeState extends State<Home> {
             Provider.of<MainProvider>(context, listen: false).barcodeScanRes ==
                     null
                 ? "MainPage"
-                : context.watch<MainProvider>().barcodeScanRes.toString(),
+                : context.read<MainProvider>().barcodeScanRes.toString(),
           ),
           leading: IconButton(
             onPressed: () {
@@ -55,8 +40,7 @@ class _HomeState extends State<Home> {
           actions: [
             IconButton(
               onPressed: () async {
-                Provider.of<MainProvider>(context, listen: false)
-                    .openCamera(context);
+                context.read<MainProvider>().openCamera(context);
               },
               icon: const Icon(
                 Icons.camera_alt_outlined,
@@ -73,16 +57,13 @@ class _HomeState extends State<Home> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            setState(() {
-              add_data(context);
-            });
-            // Navigator.of(context).push(
-            //   MaterialPageRoute(
-            //     builder: (context) {
-            //       return AddData();
-            //     },
-            //   ),
-            // );
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return AddData();
+                },
+              ),
+            );
           },
           tooltip: 'Add',
           backgroundColor: const Color.fromARGB(255, 150, 0, 72),
@@ -100,16 +81,20 @@ class _HomeState extends State<Home> {
         //         ),
         //       )
         body: FutureBuilder(
-          future: getData(context),
+          future: context.read<MainProvider>().selectData()
+          // Provider.of<MainProvider>(context, listen: false).selectData()
+          ,
           builder: ((context, snapshot) {
-            getData(context);
+            context.read<MainProvider>().selectData();
             if (snapshot.connectionState == ConnectionState.done) {
               return Consumer<MainProvider>(
                 builder: ((context, mainProvider, child) {
                   return mainProvider.todoItem.isNotEmpty
                       ? ListView.builder(
                           controller: controller,
-                          itemCount: add_data(context)
+                          itemCount: context
+                              .read<MainProvider>()
+                              .todoItem
                               .length /* mainProvider.todoItem.length*/,
                           itemBuilder: (context, index) {
                             return Dismissible(
@@ -146,12 +131,41 @@ class _HomeState extends State<Home> {
                                     ),
                                   );
                                 } else if (di == DismissDirection.startToEnd) {
-                                  Fluttertoast.showToast(
-                                      msg: mainProvider.todoItem[index].id,
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      fontSize: 16.0,
-                                      gravity: ToastGravity.BOTTOM,
-                                      backgroundColor: Colors.amber);
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('هل انت متأكد'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            child: const Text('yes'),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+
+                                  // context.read<MainProvider>().deleteData(
+                                  //       mainProvider.todoItem[index].id,
+                                  //     );
+                                  // Provider.of<MainProvider>(context,
+                                  //         listen: false)
+                                  //     .deleteData(
+                                  //   mainProvider.todoItem[index].id,
+                                  // );
+
+                                  // context.read<MainProvider>().deleteData(
+                                  //     mainProvider.todoItem[index].id);
+
+                                  // Fluttertoast.showToast(
+                                  //     msg: mainProvider.todoItem[index].id,
+                                  //     toastLength: Toast.LENGTH_SHORT,
+                                  //     fontSize: 16.0,
+                                  //     gravity: ToastGravity.BOTTOM,
+                                  //     backgroundColor: Colors.amber);
                                 }
                                 return null;
                               },

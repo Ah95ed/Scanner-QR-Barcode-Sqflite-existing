@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
@@ -26,6 +25,7 @@ class MainProvider extends ChangeNotifier {
     skip = skip + limit;
 
     notifyListeners();
+    return null;
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -42,6 +42,7 @@ class MainProvider extends ChangeNotifier {
         context: context,
         onCode: (code) {
           barcodeScanRes = code.toString();
+          print(barcodeScanRes);
         });
     notifyListeners();
   }
@@ -96,6 +97,11 @@ class MainProvider extends ChangeNotifier {
     } else {
       skip = skip + limit;
     }
+    notifyListeners();
+  }
+
+  void deleteData(String id) {
+    DataBaseHelper.delete(id);
     notifyListeners();
   }
 }

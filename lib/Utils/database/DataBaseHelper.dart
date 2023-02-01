@@ -107,8 +107,12 @@ class DataBaseHelper {
   }
 
   // delete
-  Future<Future<int>?> delete(String id) async {
+  static Future<Future<int>?> delete(String id) async {
     Database? db = await dataBaseHelper.database;
-    return db?.delete(TableName, where: Name, whereArgs: [id]);
+    return db?.rawDelete(
+      'DELETE FROM Ahmed WHERE id = ?',
+      [id],
+    );
+    // return db?.delete(TableName, where: Name, whereArgs: [id]);
   }
 }
