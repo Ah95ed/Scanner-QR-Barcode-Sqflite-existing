@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
@@ -12,6 +14,7 @@ class Home extends StatelessWidget {
     ScrollController controller = ScrollController();
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+    // var rebuild = Provider.of<MainProvider>(context);
     return ChangeNotifierProvider<MainProvider>(
       create: (_) => MainProvider(),
       child: Scaffold(
@@ -21,14 +24,13 @@ class Home extends StatelessWidget {
           backgroundColor: const Color.fromARGB(255, 150, 0, 72),
           title: Text(
             Provider.of<MainProvider>(context, listen: false).barcodeScanRes ==
-                    null
+                    ''
                 ? "MainPage"
                 : context.read<MainProvider>().barcodeScanRes.toString(),
           ),
           leading: IconButton(
             onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: ((context) => const Calcolator()),),;
+            
             },
             icon: const Icon(
               Icons.menu,
@@ -90,10 +92,8 @@ class Home extends StatelessWidget {
                   return mainProvider.todoItem.isNotEmpty
                       ? ListView.builder(
                           controller: controller,
-                          itemCount: context
-                              .read<MainProvider>()
-                              .todoItem
-                              .length /* mainProvider.todoItem.length*/,
+                          itemCount:
+                              context.read<MainProvider>().todoItem.length,
                           itemBuilder: (context, index) {
                             return Dismissible(
                               key: ValueKey(mainProvider.todoItem[index].id),
@@ -133,40 +133,37 @@ class Home extends StatelessWidget {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: const Text('هل انت متأكد'),
-                                        actions: <Widget>[
+                                        title: Text(
+                                          'هل انت متأكد من حذف \n${mainProvider.todoItem[index].name}',
+                                        ),
+                                        actions: [
                                           TextButton(
                                             child: const Text('yes'),
                                             onPressed: () {
-                                              context.read<MainProvider>().deleteData(
-                                                    mainProvider.todoItem[index].id,
+                                              context
+                                                  .read<MainProvider>()
+                                                  .deleteData(
+                                                    context
+                                                        .read<MainProvider>()
+                                                        .todoItem[index]
+                                                        .id,
                                                   );
+                                              // rebuild.loadData();
                                               Navigator.of(context).pop();
                                             },
                                           ),
+                                          const SizedBox(
+                                            width: 150.0,
+                                          ),
+                                          TextButton(
+                                            onPressed: () =>
+                                                {Navigator.of(context).pop()},
+                                            child: const Text('No'),
+                                          )
                                         ],
                                       );
                                     },
                                   );
-
-                                  // context.read<MainProvider>().deleteData(
-                                  //       mainProvider.todoItem[index].id,
-                                  //     );
-                                  // Provider.of<MainProvider>(context,
-                                  //         listen: false)
-                                  //     .deleteData(
-                                  //   mainProvider.todoItem[index].id,
-                                  // );
-
-                                  // context.read<MainProvider>().deleteData(
-                                  //     mainProvider.todoItem[index].id);
-
-                                  // Fluttertoast.showToast(
-                                  //     msg: mainProvider.todoItem[index].id,
-                                  //     toastLength: Toast.LENGTH_SHORT,
-                                  //     fontSize: 16.0,
-                                  //     gravity: ToastGravity.BOTTOM,
-                                  //     backgroundColor: Colors.amber);
                                 }
                                 return null;
                               },

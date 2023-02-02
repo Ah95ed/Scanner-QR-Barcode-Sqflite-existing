@@ -7,6 +7,7 @@ class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
   String? barcodeScanRes;
   String? code;
+
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   Future<String?> selectData() async {
     int skip = 0;
