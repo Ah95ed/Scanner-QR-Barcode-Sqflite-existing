@@ -5,13 +5,19 @@ import 'package:scanner_qr_barcode/model/User.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
-  String? barcodeScanRes;
+  String? barcodeScanRes = 'الشاشة الرئيسية';
   String? code;
+  bool isLaodingMore = false;
+  ScrollController controller = ScrollController();
+
+  int skip = 0;
+  int limit = 2;
 
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
+
   Future<String?> selectData() async {
-    int skip = 0;
-    int limit = 20;
+    // int skip = 0;
+    // int limit = 10;
     final dataList =
         await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
     todoItem = dataList!
@@ -23,10 +29,8 @@ class MainProvider extends ChangeNotifier {
               id: items['ID'].toString(),
             ))
         .toList();
-    skip = skip + limit;
-
+    // skip = skip + limit;
     notifyListeners();
-    return null;
   }
 
   Future<void> openCamera(BuildContext context) async {
@@ -43,7 +47,6 @@ class MainProvider extends ChangeNotifier {
         context: context,
         onCode: (code) {
           barcodeScanRes = code.toString();
-          print(barcodeScanRes);
         });
     notifyListeners();
   }
@@ -88,15 +91,11 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadData() async {
-    int skip = 0;
-    int limit = 20;
-    final data =
-        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
-    if (data == null) {
-      return;
-    } else {
+  Future loadData() async {
+    if (controller.position.pixels == controller.position.maxScrollExtent) {
+      isLaodingMore = true;
       skip = skip + limit;
+      selectData();
     }
     notifyListeners();
   }

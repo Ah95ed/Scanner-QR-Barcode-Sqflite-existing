@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
@@ -113,10 +111,8 @@ class _ShowInformationState extends State<ShowInformation> {
           await provider.updateBarCode(barcode.text, _id);
           await provider.updateCost(cost.text, _id);
           await provider.updateSell(sell.text, _id);
-          // Fluttertoast.showToast(msg: name.text,toastLength: Toast.LENGTH_SHORT,
-          //
-          // fontSize: 16.0,gravity: ToastGravity.BOTTOM,backgroundColor: Colors.amber
-          // );
+          provider.selectData();
+          // context.read<MainProvider>().selectData();
           Navigator.pop(context);
         },
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
