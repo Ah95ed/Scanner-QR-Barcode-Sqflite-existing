@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
-import '../widget/future_builder.dart';
 import 'AddData.dart';
 
 class Home extends StatelessWidget {

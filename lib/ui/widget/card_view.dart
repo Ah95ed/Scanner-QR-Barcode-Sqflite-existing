@@ -125,10 +125,7 @@ class _CardViewState extends State<CardView> {
                                     provid.id,
                                   );
                               setState(() {});
-                              // initState();
-                              // context.read<MainProvider>().selectData();
-
-                              // const CardView();
+                              getData();
                               Navigator.of(context).pop();
                             },
                           ),
@@ -161,12 +158,15 @@ class _CardViewState extends State<CardView> {
                         actions: [
                           TextButton(
                             child: const Text('yes'),
-                            onPressed: () {
+                            onPressed: () async {
                               context.read<MainProvider>().deleteData(
                                     provid.id,
                                   );
+
+                              // initState();
+
                               setState(() {
-                                getData();
+                                //getData();
                               });
 
                               // const CardView();
