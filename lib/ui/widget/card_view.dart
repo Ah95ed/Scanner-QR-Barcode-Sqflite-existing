@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
-import '../pages/ShowInformation.dart';
+
+import '../../model/User.dart';
 
 class CardView extends StatefulWidget {
   const CardView({super.key});
@@ -11,16 +13,49 @@ class CardView extends StatefulWidget {
 }
 
 class _CardViewState extends State<CardView> {
-  @override
-  void initState() {
-    Provider.of<MainProvider>(context, listen: false).selectData();
-    super.initState();
+  TextEditingController name = TextEditingController();
+  TextEditingController barcode = TextEditingController();
+  TextEditingController cost = TextEditingController();
+  TextEditingController sell = TextEditingController();
+  bool isLaodingMore = false;
+  ScrollController controller = ScrollController();
+  List<User> items = [];
+  int skip = 0;
+  int limit = 20;
+
+  getData() async {
+    var dataList =
+        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
+    var item = dataList!
+        .map((items) => User(
+              name: items!['Name'].toString(),
+              barcode: items['Barcode'].toString(),
+              cost: items['Cost'].toString(),
+              sell: items['Sell'].toString(),
+              id: items['ID'].toString(),
+            ))
+        .toList();
+    setState(() {
+      items.addAll(item);
+    });
   }
 
   @override
-  void setState(VoidCallback fn) {
-    Provider.of<MainProvider>(context, listen: false).selectData();
-    super.setState(fn);
+  void initState() {
+    getData();
+    controller.addListener(() async {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        setState(() {
+          isLaodingMore = true;
+        });
+        skip = skip + limit;
+        getData();
+        setState(() {
+          isLaodingMore = false;
+        });
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -30,14 +65,12 @@ class _CardViewState extends State<CardView> {
     return Consumer<MainProvider>(
       builder: ((context, mainProvider, child) {
         return ListView.builder(
-          controller: context.read<MainProvider>().controller,
-          itemCount: context.read<MainProvider>().isLaodingMore
-              ? mainProvider.todoItem.length + 1
-              : mainProvider.todoItem.length,
+          controller: controller,
+          itemCount: isLaodingMore ? items.length + 1 : items.length,
           itemBuilder: (context, index) {
-            var provid = mainProvider.todoItem[index];
+            var provid = items[index];
             return Dismissible(
-              key: ValueKey(mainProvider.todoItem[index].id),
+              key: ValueKey(items[index].id),
               background: Container(
                 alignment: Alignment.centerRight,
                 margin: EdgeInsets.all(width * 0.01),
@@ -52,29 +85,39 @@ class _CardViewState extends State<CardView> {
               ),
               confirmDismiss: (DismissDirection di) async {
                 if (di == DismissDirection.endToStart) {
-                  return await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return ShowInformation(
-                          named: provid.name,
-                          barcoded: provid.barcode,
-                          selld: provid.sell,
-                          idd: provid.id,
-                          costd: provid.cost,
-                        );
-                      },
-                    ),
-                  );
-                  setState(() {});
-                } else if (di == DismissDirection.startToEnd) {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text(
-                          'هل انت متأكد من حذف \n${mainProvider.todoItem[index].name}',
-                        ),
+                        title: const Text("تعديل البيانات"),
                         actions: [
+                          Column(
+                            children: [
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'Name Item',
+                                ),
+                                controller: name,
+                              ),
+                              TextFormField(
+                                decoration:
+                                    const InputDecoration(labelText: 'Barcode'),
+                                controller: barcode,
+                              ),
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'cost',
+                                ),
+                                controller: cost,
+                              ),
+                              TextFormField(
+                                decoration: const InputDecoration(
+                                  labelText: 'sell',
+                                ),
+                                controller: sell,
+                              ),
+                            ],
+                          ),
                           TextButton(
                             child: const Text('yes'),
                             onPressed: () async {
@@ -84,6 +127,47 @@ class _CardViewState extends State<CardView> {
                               setState(() {});
                               // initState();
                               // context.read<MainProvider>().selectData();
+
+                              // const CardView();
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  // return await Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (context) {
+                  //       return ShowInformation(
+                  //         named: provid.name,
+                  //         barcoded: provid.barcode,
+                  //         selld: provid.sell,
+                  //         idd: provid.id,
+                  //         costd: provid.cost,
+                  //       );
+                  //     },
+                  //   ),
+                  // );
+                } else if (di == DismissDirection.startToEnd) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        //add dialog to update data
+                        title: Text(
+                          'هل انت متأكد من حذف \n${provid.name}',
+                        ),
+                        actions: [
+                          TextButton(
+                            child: const Text('yes'),
+                            onPressed: () {
+                              context.read<MainProvider>().deleteData(
+                                    provid.id,
+                                  );
+                              setState(() {
+                                getData();
+                              });
 
                               // const CardView();
                               Navigator.of(context).pop();
@@ -107,11 +191,11 @@ class _CardViewState extends State<CardView> {
                 elevation: 8,
                 child: ListTile(
                   title: Text(
-                    mainProvider.todoItem[index].name,
+                    items[index].name,
                     style: const TextStyle(color: Colors.black, fontSize: 16),
                   ),
                   subtitle: Text(
-                    mainProvider.todoItem[index].sell,
+                    items[index].sell,
                     style: const TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ),

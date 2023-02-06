@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
@@ -41,10 +40,10 @@ class AddData extends StatelessWidget {
           "${cost.text}","${sell.text}")
           ''');
           if (response! > 0) {
-            Fluttertoast.showToast(
-                msg: " ${name.text}تمت اَضافة ",
-                gravity: ToastGravity.CENTER,
-                toastLength: Toast.LENGTH_SHORT);
+            // Fluttertoast.showToast(
+            //     msg: " ${name.text}تمت اَضافة ",
+            //     gravity: ToastGravity.CENTER,
+            //     toastLength: Toast.LENGTH_SHORT);
           } else {}
         },
         tooltip: 'Add',

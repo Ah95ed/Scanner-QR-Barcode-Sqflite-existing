@@ -76,33 +76,34 @@ class _ShowInformationState extends State<ShowInformation> {
         padding: const EdgeInsets.all(20.0),
         children: [
           Form(
-              child: Column(
-            key: formState,
-            children: [
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'Name Item',
+            child: Column(
+              key: formState,
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Name Item',
+                  ),
+                  controller: name,
                 ),
-                controller: name,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Barcode'),
-                controller: barcode,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'cost',
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'Barcode'),
+                  controller: barcode,
                 ),
-                controller: cost,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(
-                  labelText: 'sell',
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'cost',
+                  ),
+                  controller: cost,
                 ),
-                controller: sell,
-              ),
-            ],
-          ))
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'sell',
+                  ),
+                  controller: sell,
+                ),
+              ],
+            ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -111,7 +112,7 @@ class _ShowInformationState extends State<ShowInformation> {
           await provider.updateBarCode(barcode.text, _id);
           await provider.updateCost(cost.text, _id);
           await provider.updateSell(sell.text, _id);
-          provider.selectData();
+          // provider.selectData();
           // context.read<MainProvider>().selectData();
           Navigator.pop(context);
         },

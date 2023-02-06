@@ -21,6 +21,8 @@ class DataBaseHelper {
   Future<Database?> get database async {
     if (_database != null) {
       return _database;
+    } else if (Platform.isWindows || Platform.isLinux) {
+      return await null;
     } else {
       return await initDataBase();
     }

@@ -7,19 +7,11 @@ class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
   String? barcodeScanRes = 'الشاشة الرئيسية';
   String? code;
-  bool isLaodingMore = false;
-  ScrollController controller = ScrollController();
-
-  int skip = 0;
-  int limit = 2;
 
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
-  Future<String?> selectData() async {
-    // int skip = 0;
-    // int limit = 10;
-    final dataList =
-        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
+  Future<List?> selectData({String? skip, String? limit}) async {
+    final dataList = await DataBaseHelper.getAllUser(skip!, limit!);
     todoItem = dataList!
         .map((items) => User(
               name: items!['Name'].toString(),
@@ -29,7 +21,6 @@ class MainProvider extends ChangeNotifier {
               id: items['ID'].toString(),
             ))
         .toList();
-    // skip = skip + limit;
     notifyListeners();
   }
 
@@ -91,14 +82,14 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future loadData() async {
-    if (controller.position.pixels == controller.position.maxScrollExtent) {
-      isLaodingMore = true;
-      skip = skip + limit;
-      selectData();
-    }
-    notifyListeners();
-  }
+  // Future loadData() async {
+  //   if (controller.position.pixels == controller.position.maxScrollExtent) {
+  //     isLaodingMore = true;
+  //     skip = skip + limit;
+  //     selectData();
+  //   }
+  //   notifyListeners();
+  // }
 
   void deleteData(String id) {
     DataBaseHelper.delete(id);
