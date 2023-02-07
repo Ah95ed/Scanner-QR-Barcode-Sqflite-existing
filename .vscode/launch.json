@@ -5,6 +5,19 @@
         "version": "0.2.0",
         "configurations": [
                 {
+                        "name": "Dart: Run all Tests",
+                        "type": "dart",
+                        "request": "launch",
+                        "program": "./test/"
+                },
+        {
+                "name": "Launch Chrome",
+                "request": "launch",
+                "type": "chrome",
+                "url": "http://localhost:8080",
+                "webRoot": "${workspaceFolder}"
+        },
+                {
                         "name": "scanner_qr_barcode",
                         "request": "launch",
                         "type": "dart"

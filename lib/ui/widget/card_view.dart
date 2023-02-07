@@ -5,68 +5,69 @@ import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
 import '../../model/User.dart';
 
-class CardView extends StatefulWidget {
-  const CardView({super.key});
-
-  @override
-  State<CardView> createState() => _CardViewState();
-}
-
-class _CardViewState extends State<CardView> {
+class CardView extends StatelessWidget {
+   CardView({super.key});
+//
+//   @override
+//   State<CardView> createState() => _CardViewState();
+// }
+//
+// class _CardViewState extends State<CardView> {
   TextEditingController name = TextEditingController();
   TextEditingController barcode = TextEditingController();
   TextEditingController cost = TextEditingController();
   TextEditingController sell = TextEditingController();
-  bool isLaodingMore = false;
-  ScrollController controller = ScrollController();
-  List<User> items = [];
-  int skip = 0;
-  int limit = 20;
-
-  getData() async {
-    var dataList =
-        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
-    var item = dataList!
-        .map((items) => User(
-              name: items!['Name'].toString(),
-              barcode: items['Barcode'].toString(),
-              cost: items['Cost'].toString(),
-              sell: items['Sell'].toString(),
-              id: items['ID'].toString(),
-            ))
-        .toList();
-    setState(() {
-      items.addAll(item);
-    });
-  }
-
-  @override
-  void initState() {
-    getData();
-    controller.addListener(() async {
-      if (controller.position.pixels == controller.position.maxScrollExtent) {
-        setState(() {
-          isLaodingMore = true;
-        });
-        skip = skip + limit;
-        getData();
-        setState(() {
-          isLaodingMore = false;
-        });
-      }
-    });
-    super.initState();
-  }
+  // bool isLaodingMore = false;
+  // ScrollController controller = ScrollController();
+  // List<User> items = [];
+  // int skip = 0;
+  // int limit = 20;
+  //
+  // getData() async {
+  //   var dataList =
+  //       await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
+  //   var item = dataList!
+  //       .map((items) => User(
+  //             name: items!['Name'].toString(),
+  //             barcode: items['Barcode'].toString(),
+  //             cost: items['Cost'].toString(),
+  //             sell: items['Sell'].toString(),
+  //             id: items['ID'].toString(),
+  //           ))
+  //       .toList();
+  //   setState(() {
+  //     items.addAll(item);
+  //   });
+  // }
+  //
+  // @override
+  // void initState() {
+  //   getData();
+  //   controller.addListener(() async {
+  //     if (controller.position.pixels == controller.position.maxScrollExtent) {
+  //       setState(() {
+  //         isLaodingMore = true;
+  //       });
+  //       skip = skip + limit;
+  //       getData();
+  //       setState(() {
+  //         isLaodingMore = false;
+  //       });
+  //     }
+  //   });
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
+    var provid  = Provider.of<MainProvider>(context,listen: false);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     return Consumer<MainProvider>(
       builder: ((context, mainProvider, child) {
         return ListView.builder(
-          controller: controller,
-          itemCount: isLaodingMore ? items.length + 1 : items.length,
+          controller: Provider.of<MainProvider>(context).controller,
+          itemCount: provid.isLaodingMore ? provid..length + 1 : items.length,
           itemBuilder: (context, index) {
             var provid = items[index];
             return Dismissible(
@@ -97,7 +98,8 @@ class _CardViewState extends State<CardView> {
                                 decoration: const InputDecoration(
                                   labelText: 'Name Item',
                                 ),
-                                controller: name,
+                                controller: name =
+                                    provid.name as TextEditingController,
                               ),
                               TextFormField(
                                 decoration:
@@ -171,6 +173,7 @@ class _CardViewState extends State<CardView> {
 
                               // const CardView();
                               Navigator.of(context).pop();
+                              setState(() {});
                             },
                           ),
                           const SizedBox(
