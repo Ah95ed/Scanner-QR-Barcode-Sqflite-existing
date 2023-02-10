@@ -1,8 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
-
 import '../../model/User.dart';
 
 class CardView extends StatefulWidget {
@@ -99,9 +100,6 @@ class _CardViewState extends State<CardView> {
                                   labelText: 'Name Item',
                                 ),
                                 controller: name,
-                                onSaved: (newValue) {
-                                  name.text = items[index].name;
-                                },
                               ),
                               TextFormField(
                                 decoration:
@@ -112,8 +110,7 @@ class _CardViewState extends State<CardView> {
                                 decoration: const InputDecoration(
                                   labelText: 'cost',
                                 ),
-                                controller: cost =
-                                    items[index].name as TextEditingController,
+                                controller: cost,
                               ),
                               TextFormField(
                                 decoration: const InputDecoration(
@@ -126,8 +123,6 @@ class _CardViewState extends State<CardView> {
                           TextButton(
                             child: const Text('yes'),
                             onPressed: () async {
-                              context.watch<MainProvider>().notfy(() {});
-
                               Navigator.of(context).pop();
                             },
                           ),
@@ -164,14 +159,13 @@ class _CardViewState extends State<CardView> {
                               mainProvider.deleteData(
                                 items[index].id,
                               );
-                              // rebuildUi();
-                              setState(() {});
                               Navigator.of(context).pop();
+                              // rebuildUi();
                               setState(() {});
                             },
                           ),
                           const SizedBox(
-                            width: 150.0,
+                            width: double.minPositive,
                           ),
                           TextButton(
                             onPressed: () => {Navigator.of(context).pop()},
@@ -182,7 +176,6 @@ class _CardViewState extends State<CardView> {
                     },
                   );
                 }
-                return null;
               },
               child: Card(
                 elevation: 8,
@@ -205,19 +198,19 @@ class _CardViewState extends State<CardView> {
   }
 }
 
-class Search extends StatelessWidget {
-  Search({super.key});
-  TextEditingController controller = TextEditingController();
+// class Search extends StatelessWidget {
+//   Search({super.key});
+//   TextEditingController controller = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      cursorHeight: 12.0,
-      decoration: const InputDecoration(
-        labelText: 'Search',
-        hintText: 'البحث',
-      ),
-      controller: controller,
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextFormField(
+//       cursorHeight: 12.0,
+//       decoration: const InputDecoration(
+//         labelText: 'Search',
+//         hintText: 'البحث',
+//       ),
+//       controller: controller,
+//     );
+//   }
+// }

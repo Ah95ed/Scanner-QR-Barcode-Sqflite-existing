@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/model/User.dart';
+import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
@@ -25,15 +27,6 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future<void> openCamera(BuildContext context) async {
-    // try {
-    //   barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-    //       '#ff6666', 'اللغاء', true, ScanMode.BARCODE);
-
-    //     print(barcodeScanRes);
-
-    // } on PlatformException {
-    //   barcodeScanRes = 'Failed to get platform version.';
-    // }
     _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
         context: context,
         onCode: (code) {
@@ -87,16 +80,11 @@ class MainProvider extends ChangeNotifier {
   List<User> items = [];
   int skip = 0;
   int limit = 20;
-  void notfy(VoidCallback fn) {
-    fn() {
-      notifyListeners();
-    }
-  }
 
   getData() async {
     var dataList =
         await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
-    var item = dataList!
+    todoItem = dataList!
         .map((items) => User(
               name: items!['Name'].toString(),
               barcode: items['Barcode'].toString(),
@@ -105,23 +93,19 @@ class MainProvider extends ChangeNotifier {
               id: items['ID'].toString(),
             ))
         .toList();
-    notfy(() {
-      items.addAll(item);
-    });
+    notifyListeners();
   }
 
   lodingData() async {
     getData();
     controller.addListener(() async {
       if (controller.position.pixels == controller.position.maxScrollExtent) {
-        notfy(() {
-          isLaodingMore = true;
-        });
+        isLaodingMore = true;
+
         skip = skip + limit;
         getData();
-        notfy(() {
-          isLaodingMore = false;
-        });
+
+        isLaodingMore = false;
       }
     });
   }
@@ -144,6 +128,23 @@ class MainProvider extends ChangeNotifier {
           ),
         )
         .toList();
+    notifyListeners();
+  }
+
+  search(String name) async {
+    final result = await DataBaseHelper.search(name);
+    todoItem = result!
+        .map((e) => User(
+              name: e['Name'].toString(),
+              barcode: e['Barcode'].toString(),
+              cost: e['Cost'].toString(),
+              sell: e['Sell'].toString(),
+              id: e['ID'].toString(),
+            ))
+        .toList();
+    for (var r in todoItem) {
+      print(r.name);
+    }
     notifyListeners();
   }
 }

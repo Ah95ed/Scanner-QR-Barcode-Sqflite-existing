@@ -115,6 +115,11 @@ class DataBaseHelper {
       'DELETE FROM Ahmed WHERE id = ?',
       [id],
     );
-    // return db?.delete(TableName, where: Name, whereArgs: [id]);
+  }
+
+  static Future<List<Map<String, dynamic>>?> search(String name) async {
+    Database? db = await dataBaseHelper.database;
+    return await db?.query(DataBaseHelper.TableName,
+        where: "Name LIKE ?", whereArgs: ['%$name']);
   }
 }

@@ -16,16 +16,16 @@ class Home extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           elevation: 8,
-          leading: const Icon(Icons.search),
+          leading: const Icon(Icons.more_horiz),
           title: const Text('AppBar'),
           actions: [
             IconButton(
               onPressed: () {
+                context.read<MainProvider>().lodingData();
                 showSearch(
                   context: context,
-                  delegate: CustomSearchDelegate(context),
+                  delegate: CustomSearchDelegate(),
                 );
-                Provider.of<MainProvider>(context, listen: false).getData();
               },
               icon: const Icon(Icons.search),
             )
@@ -56,10 +56,7 @@ class Home extends StatelessWidget {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-  CustomSearchDelegate(this.context);
-
-  final BuildContext context;
-
+  List<User> users = [];
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -84,10 +81,11 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
+    var search = context.watch<MainProvider>().search(query);
     var result = context.watch<MainProvider>().todoItem;
-    List<User> users = [];
-    for (var named in result) {
-      if (named.toString().toLowerCase().contains(query.toLowerCase())) {
+
+    for (User named in result) {
+      if (named.name.toLowerCase().contains(query.toLowerCase())) {
         users.add(named);
       }
     }
@@ -105,7 +103,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     var result = context.watch<MainProvider>().todoItem;
-    List<User> users = [];
+
     for (var named in result) {
       if (named.name.toLowerCase().contains(query.toLowerCase())) {
         users.add(named);
@@ -117,6 +115,7 @@ class CustomSearchDelegate extends SearchDelegate {
         var result = users[index];
         return ListTile(
           title: Text(result.name),
+          subtitle: Text(result.sell),
         );
       },
     );
