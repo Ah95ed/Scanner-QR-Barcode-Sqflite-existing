@@ -9,20 +9,20 @@ class MainProvider extends ChangeNotifier {
   String? code;
 
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
-  //
-  // Future<List?> selectData({String? skip, String? limit}) async {
-  //   final dataList = await DataBaseHelper.getAllUser(skip!, limit!);
-  //   todoItem = dataList!
-  //       .map((items) => User(
-  //             name: items!['Name'].toString(),
-  //             barcode: items['Barcode'].toString(),
-  //             cost: items['Cost'].toString(),
-  //             sell: items['Sell'].toString(),
-  //             id: items['ID'].toString(),
-  //           ))
-  //       .toList();
-  //   notifyListeners();
-  // }
+
+  Future<List?> selectData({String? skip, String? limit}) async {
+    final dataList = await DataBaseHelper.getAllUser(skip!, limit!);
+    todoItem = dataList!
+        .map((items) => User(
+              name: items!['Name'].toString(),
+              barcode: items['Barcode'].toString(),
+              cost: items['Cost'].toString(),
+              sell: items['Sell'].toString(),
+              id: items['ID'].toString(),
+            ))
+        .toList();
+    notifyListeners();
+  }
 
   Future<void> openCamera(BuildContext context) async {
     // try {
@@ -81,12 +81,19 @@ class MainProvider extends ChangeNotifier {
     );
     notifyListeners();
   }
+
   bool isLaodingMore = false;
   ScrollController controller = ScrollController();
   List<User> items = [];
   int skip = 0;
   int limit = 20;
-getData() async {
+  void notfy(VoidCallback fn) {
+    fn() {
+      notifyListeners();
+    }
+  }
+
+  getData() async {
     var dataList =
         await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
     var item = dataList!
@@ -98,32 +105,45 @@ getData() async {
               id: items['ID'].toString(),
             ))
         .toList();
-    setState(() {
+    notfy(() {
       items.addAll(item);
     });
   }
 
-
-
-lodingData()async{
-
-     getData();
+  lodingData() async {
+    getData();
     controller.addListener(() async {
-      
-      if (controller.position.pixels == 
-      controller.position.maxScrollExtent) {
-        setState(() {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        notfy(() {
           isLaodingMore = true;
         });
         skip = skip + limit;
         getData();
-        
+        notfy(() {
           isLaodingMore = false;
-       
-}
-   
+        });
+      }
+    });
+  }
+
   void deleteData(String id) {
     DataBaseHelper.delete(id);
+    notifyListeners();
+  }
+
+  getDataAll() async {
+    final data = DataBaseHelper.dataAll();
+    todoItem = data
+        .map(
+          (e) => User(
+            name: e['Name'].toString(),
+            barcode: e['Barcode'].toString(),
+            cost: e['Cost'].toString(),
+            sell: e['Sell'].toString(),
+            id: e['ID'].toString(),
+          ),
+        )
+        .toList();
     notifyListeners();
   }
 }

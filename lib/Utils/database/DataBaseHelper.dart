@@ -102,7 +102,7 @@ class DataBaseHelper {
         where: 'ID = ?', whereArgs: [id]);
   }
 
-  List<Map> Data() {
+  static List<Map> dataAll() {
     Database db = dataBaseHelper.database as Database;
     List<Map>? response = db.rawQuery("SELECT * FROM Ahmed") as List<Map>?;
     return response!;

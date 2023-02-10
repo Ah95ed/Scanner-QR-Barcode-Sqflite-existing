@@ -13,7 +13,7 @@ class BodyScreen extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return Consumer<MainProvider>(
               builder: (context, mainprovider, child) {
-            return const CardView();
+            return CardView();
           });
         } else {
           return const Center(

@@ -5,71 +5,71 @@ import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
 import '../../model/User.dart';
 
-class CardView extends StatelessWidget {
-   CardView({super.key});
-//
-//   @override
-//   State<CardView> createState() => _CardViewState();
-// }
-//
-// class _CardViewState extends State<CardView> {
+class CardView extends StatefulWidget {
+  const CardView({super.key});
+
+  @override
+  State<CardView> createState() => _CardViewState();
+}
+
+class _CardViewState extends State<CardView> {
   TextEditingController name = TextEditingController();
   TextEditingController barcode = TextEditingController();
   TextEditingController cost = TextEditingController();
   TextEditingController sell = TextEditingController();
-  // bool isLaodingMore = false;
-  // ScrollController controller = ScrollController();
-  // List<User> items = [];
-  // int skip = 0;
-  // int limit = 20;
-  //
-  // getData() async {
-  //   var dataList =
-  //       await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
-  //   var item = dataList!
-  //       .map((items) => User(
-  //             name: items!['Name'].toString(),
-  //             barcode: items['Barcode'].toString(),
-  //             cost: items['Cost'].toString(),
-  //             sell: items['Sell'].toString(),
-  //             id: items['ID'].toString(),
-  //           ))
-  //       .toList();
-  //   setState(() {
-  //     items.addAll(item);
-  //   });
-  // }
-  //
-  // @override
-  // void initState() {
-  //   getData();
-  //   controller.addListener(() async {
-  //     if (controller.position.pixels == controller.position.maxScrollExtent) {
-  //       setState(() {
-  //         isLaodingMore = true;
-  //       });
-  //       skip = skip + limit;
-  //       getData();
-  //       setState(() {
-  //         isLaodingMore = false;
-  //       });
-  //     }
-  //   });
-  //   super.initState();
-  // }
+  bool isLaodingMore = false;
+  ScrollController controller = ScrollController();
+  List<User> items = [];
+  int skip = 0;
+  int limit = 20;
+
+  getData() async {
+    var dataList =
+        await DataBaseHelper.getAllUser(skip.toString(), limit.toString());
+    var item = dataList!
+        .map((items) => User(
+              name: items!['Name'].toString(),
+              barcode: items['Barcode'].toString(),
+              cost: items['Cost'].toString(),
+              sell: items['Sell'].toString(),
+              id: items['ID'].toString(),
+            ))
+        .toList();
+    setState(() {
+      items.addAll(item);
+    });
+  }
+
+  @override
+  void initState() {
+    getData();
+    controller.addListener(() async {
+      if (controller.position.pixels == controller.position.maxScrollExtent) {
+        setState(() {
+          isLaodingMore = true;
+        });
+        skip = skip + limit;
+        getData();
+        setState(() {
+          isLaodingMore = false;
+        });
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    var provid  = Provider.of<MainProvider>(context,listen: false);
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
+
     return Consumer<MainProvider>(
       builder: ((context, mainProvider, child) {
         return ListView.builder(
-          controller: Provider.of<MainProvider>(context).controller,
-          itemCount: provid.isLaodingMore ? provid..length + 1 : items.length,
+          controller: controller,
+          itemCount: isLaodingMore ? items.length + 1 : items.length,
           itemBuilder: (context, index) {
-            var provid = items[index];
+            // var provid = context.watch<MainProvider>().items;
             return Dismissible(
               key: ValueKey(items[index].id),
               background: Container(
@@ -98,8 +98,10 @@ class CardView extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'Name Item',
                                 ),
-                                controller: name =
-                                    provid.name as TextEditingController,
+                                controller: name,
+                                onSaved: (newValue) {
+                                  name.text = items[index].name;
+                                },
                               ),
                               TextFormField(
                                 decoration:
@@ -110,11 +112,12 @@ class CardView extends StatelessWidget {
                                 decoration: const InputDecoration(
                                   labelText: 'cost',
                                 ),
-                                controller: cost,
+                                controller: cost =
+                                    items[index].name as TextEditingController,
                               ),
                               TextFormField(
                                 decoration: const InputDecoration(
-                                  labelText: 'sell',
+                                  labelText: 'Sell',
                                 ),
                                 controller: sell,
                               ),
@@ -123,11 +126,8 @@ class CardView extends StatelessWidget {
                           TextButton(
                             child: const Text('yes'),
                             onPressed: () async {
-                              context.read<MainProvider>().deleteData(
-                                    provid.id,
-                                  );
-                              setState(() {});
-                              getData();
+                              context.watch<MainProvider>().notfy(() {});
+
                               Navigator.of(context).pop();
                             },
                           ),
@@ -155,23 +155,17 @@ class CardView extends StatelessWidget {
                       return AlertDialog(
                         //add dialog to update data
                         title: Text(
-                          'هل انت متأكد من حذف \n${provid.name}',
+                          'هل انت متأكد من حذف \n${items[index].name}',
                         ),
                         actions: [
                           TextButton(
                             child: const Text('yes'),
-                            onPressed: () async {
-                              context.read<MainProvider>().deleteData(
-                                    provid.id,
-                                  );
-
-                              // initState();
-
-                              setState(() {
-                                //getData();
-                              });
-
-                              // const CardView();
+                            onPressed: () {
+                              mainProvider.deleteData(
+                                items[index].id,
+                              );
+                              // rebuildUi();
+                              setState(() {});
                               Navigator.of(context).pop();
                               setState(() {});
                             },
@@ -206,16 +200,24 @@ class CardView extends StatelessWidget {
             );
           },
         );
-        // : const Center(
-        //     child: Text(
-        //       'Empty',
-        //       style: TextStyle(
-        //         color: Colors.red,
-        //         fontSize: 28,
-        //       ),
-        //     ),
-        //   );
       }),
+    );
+  }
+}
+
+class Search extends StatelessWidget {
+  Search({super.key});
+  TextEditingController controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      cursorHeight: 12.0,
+      decoration: const InputDecoration(
+        labelText: 'Search',
+        hintText: 'البحث',
+      ),
+      controller: controller,
     );
   }
 }
