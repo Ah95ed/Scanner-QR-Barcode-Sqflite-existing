@@ -102,10 +102,10 @@ class DataBaseHelper {
         where: 'ID = ?', whereArgs: [id]);
   }
 
-  static List<Map> dataAll() {
-    Database db = dataBaseHelper.database as Database;
-    List<Map>? response = db.rawQuery("SELECT * FROM Ahmed") as List<Map>?;
-    return response!;
+  static Future<List<Map<String, dynamic>?>?> dataAll() async {
+    Database? db = await dataBaseHelper.database;
+    var response = db?.rawQuery("SELECT * FROM Ahmed");
+    return response;
   }
 
   // delete

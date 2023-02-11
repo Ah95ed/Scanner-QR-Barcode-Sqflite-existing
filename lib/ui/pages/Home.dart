@@ -56,13 +56,13 @@ class Home extends StatelessWidget {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<User> users = [];
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
+          context.read<MainProvider>().todoItem.clear();
           query = '';
         },
       ),
@@ -74,6 +74,7 @@ class CustomSearchDelegate extends SearchDelegate {
     return IconButton(
       icon: const Icon(Icons.arrow_back),
       onPressed: () {
+        context.read<MainProvider>().todoItem.clear();
         close(context, null);
       },
     );
@@ -81,12 +82,12 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    var search = context.watch<MainProvider>().search(query);
+    context.watch<MainProvider>().getDataAll();
     var result = context.watch<MainProvider>().todoItem;
-
-    for (User named in result) {
-      if (named.name.toLowerCase().contains(query.toLowerCase())) {
-        users.add(named);
+    List<User> users = [];
+    for (int i = 0; i < result.length; i++) {
+      if (result[i].name.toLowerCase().contains(query.toLowerCase())) {
+        users.add(result[i]);
       }
     }
     return ListView.builder(
@@ -103,10 +104,11 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     var result = context.watch<MainProvider>().todoItem;
-
-    for (var named in result) {
-      if (named.name.toLowerCase().contains(query.toLowerCase())) {
-        users.add(named);
+    context.watch<MainProvider>().getDataAll();
+    List<User> users = [];
+    for (int i = 0; i < result.length; i++) {
+      if (result[i].name.toLowerCase().contains(query.toLowerCase())) {
+        users.add(result[i]);
       }
     }
     return ListView.builder(

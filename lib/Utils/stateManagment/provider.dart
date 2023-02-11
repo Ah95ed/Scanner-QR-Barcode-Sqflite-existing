@@ -116,11 +116,11 @@ class MainProvider extends ChangeNotifier {
   }
 
   getDataAll() async {
-    final data = DataBaseHelper.dataAll();
-    todoItem = data
+    final data = await DataBaseHelper.dataAll();
+    todoItem = data!
         .map(
           (e) => User(
-            name: e['Name'].toString(),
+            name: e!['Name'].toString(),
             barcode: e['Barcode'].toString(),
             cost: e['Cost'].toString(),
             sell: e['Sell'].toString(),
@@ -142,9 +142,6 @@ class MainProvider extends ChangeNotifier {
               id: e['ID'].toString(),
             ))
         .toList();
-    for (var r in todoItem) {
-      print(r.name);
-    }
     notifyListeners();
   }
 }
