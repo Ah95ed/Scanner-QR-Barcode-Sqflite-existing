@@ -15,6 +15,7 @@ class AddData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    barcode.text = context.watch<MainProvider>().barcodeScanRes.toString();
     return Scaffold(
       appBar: AppBar(
         title: const Text(

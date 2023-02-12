@@ -7,7 +7,7 @@ import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
-  String? barcodeScanRes = 'الشاشة الرئيسية';
+  String? barcodeScanRes;
   String? code;
 
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
