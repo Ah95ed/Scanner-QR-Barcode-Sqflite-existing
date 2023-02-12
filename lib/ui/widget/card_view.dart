@@ -63,7 +63,7 @@ class _CardViewState extends State<CardView> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-
+    final provider = Provider.of<MainProvider>(context, listen: false);
     return Consumer<MainProvider>(
       builder: ((context, mainProvider, child) {
         return ListView.builder(
@@ -90,6 +90,10 @@ class _CardViewState extends State<CardView> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
+                      name.text = items[index].name;
+                      barcode.text = items[index].barcode;
+                      sell.text = items[index].sell;
+                      cost.text = items[index].cost;
                       return AlertDialog(
                         title: const Text("تعديل البيانات"),
                         actions: [
@@ -121,11 +125,32 @@ class _CardViewState extends State<CardView> {
                             ],
                           ),
                           TextButton(
-                            child: const Text('yes'),
+                            child: const Text('Edit'),
+                            onPressed: () async {
+                              await provider.updateName(
+                                  name.text, items[index].id);
+                              await provider.updateBarCode(
+                                  barcode.text, items[index].id);
+                              await provider.updateCost(
+                                  cost.text, items[index].id);
+                              await provider.updateSell(
+                                  sell.text, items[index].id);
+                              setState(() {});
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          TextButton(
+                            child: const Text('Close'),
                             onPressed: () async {
                               Navigator.of(context).pop();
                             },
                           ),
+                          // TextButton(
+                          //   child: const Text('OpenCamery'),
+                          //   onPressed: () async {
+                          //     await provider.openCamera(context);
+                          //   },
+                          // ),
                         ],
                       );
                     },
@@ -149,8 +174,8 @@ class _CardViewState extends State<CardView> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         //add dialog to update data
-                        title: Text(
-                          'هل انت متأكد من حذف \n${items[index].name}',
+                        title: const Text(
+                          'هل انت متأكد من حذف',
                         ),
                         actions: [
                           TextButton(
