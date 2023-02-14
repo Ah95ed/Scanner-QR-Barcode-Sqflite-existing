@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/model/User.dart';
+import 'package:scanner_qr_barcode/ui/widget/CameraUp.dart';
 import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
 
 class MainProvider extends ChangeNotifier {
@@ -142,6 +143,11 @@ class MainProvider extends ChangeNotifier {
               id: e['ID'].toString(),
             ))
         .toList();
+    notifyListeners();
+  }
+
+  OpenCameraCalc() {
+    const QRViewExample();
     notifyListeners();
   }
 }

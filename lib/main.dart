@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';

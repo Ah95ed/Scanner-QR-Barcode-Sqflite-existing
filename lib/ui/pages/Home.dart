@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
+import 'package:scanner_qr_barcode/ui/widget/CameraUp.dart';
 import 'package:scanner_qr_barcode/ui/widget/CustomSearch_Delegate.dart';
-import 'package:scanner_qr_barcode/ui/widget/future_builder.dart';
+import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
 import 'AddData.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<MainProvider>(
@@ -15,7 +15,14 @@ class Home extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           elevation: 8,
-          leading: const Icon(Icons.more_horiz),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const QRViewExample(),
+              ));
+            },
+            icon: const Icon(Icons.more_horiz_outlined),
+          ),
           title: Text(context.watch<MainProvider>().barcodeScanRes.toString()),
           actions: [
             IconButton(
@@ -54,7 +61,7 @@ class Home extends StatelessWidget {
             size: 32.0,
           ),
         ),
-        body: const BodyScreen(),
+        body: const CardView(),
       ),
     );
   }
