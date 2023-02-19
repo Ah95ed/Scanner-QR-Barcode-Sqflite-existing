@@ -4,14 +4,19 @@ import '../../Utils/stateManagment/provider.dart';
 import '../../model/User.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
+  String? resultes;
+  CustomSearchDelegate({required this.resultes});
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
         icon: const Icon(Icons.clear),
         onPressed: () {
-          context.read<MainProvider>().todoItem.clear();
           query = '';
+          resultes = "";
+          context.read<MainProvider>().barcodeScanRes = "";
+          context.read<MainProvider>().todoItem.clear();
         },
       ),
     ];
@@ -33,9 +38,12 @@ class CustomSearchDelegate extends SearchDelegate {
     context.watch<MainProvider>().getDataAll();
     var result = context.watch<MainProvider>().todoItem;
     List<User> users = [];
+    query = resultes.toString();
     for (int i = 0; i < result.length; i++) {
-      if (result[i].name.toLowerCase().contains(query.toLowerCase())) {
+      if (result[i].barcode.toLowerCase().contains(query.toLowerCase())) {
         users.add(result[i]);
+        context.read<MainProvider>().barcodeScanRes = '';
+        break;
       }
     }
     return ListView.builder(
@@ -54,9 +62,11 @@ class CustomSearchDelegate extends SearchDelegate {
     var result = context.watch<MainProvider>().todoItem;
     context.watch<MainProvider>().getDataAll();
     List<User> users = [];
+    query = resultes.toString();
     for (int i = 0; i < result.length; i++) {
-      if (result[i].name.toLowerCase().contains(query.toLowerCase())) {
+      if (result[i].barcode.toLowerCase().contains(query.toLowerCase())) {
         users.add(result[i]);
+        break;
       }
     }
     return ListView.builder(

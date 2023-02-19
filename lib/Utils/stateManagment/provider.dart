@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/model/User.dart';
 import 'package:scanner_qr_barcode/ui/widget/CameraUp.dart';
-import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
+import 'package:scanner_qr_barcode/ui/widget/CustomSearch_Delegate.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
@@ -29,11 +28,21 @@ class MainProvider extends ChangeNotifier {
 
   Future<void> openCamera(BuildContext context) async {
     _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-        context: context,
-        onCode: (code) {
-          barcodeScanRes = code.toString();
-        });
+      context: context,
+      onCode: (code) {
+        barcodeScanRes = code.toString();
+        searchBar(context);
+        notifyListeners();
+      },
+    );
     notifyListeners();
+  }
+
+  void searchBar(BuildContext context) {
+    showSearch(
+      context: context,
+      delegate: CustomSearchDelegate(resultes: barcodeScanRes),
+    );
   }
 
   Future updateName(String name, String id) async {
@@ -143,11 +152,6 @@ class MainProvider extends ChangeNotifier {
               id: e['ID'].toString(),
             ))
         .toList();
-    notifyListeners();
-  }
-
-  OpenCameraCalc() {
-    const QRViewExample();
     notifyListeners();
   }
 }

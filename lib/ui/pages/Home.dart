@@ -10,6 +10,8 @@ class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    final provid = Provider.of<MainProvider>(context, listen: false);
+    String? result = context.watch<MainProvider>().barcodeScanRes;
     return ChangeNotifierProvider<MainProvider>(
       create: (_) => MainProvider(),
       child: Scaffold(
@@ -23,15 +25,12 @@ class Home extends StatelessWidget {
             },
             icon: const Icon(Icons.more_horiz_outlined),
           ),
-          title: Text(context.watch<MainProvider>().barcodeScanRes.toString()),
+          title: const Text('الشاشة الرئيسية'),
           actions: [
             IconButton(
               onPressed: () {
                 context.read<MainProvider>().lodingData();
-                showSearch(
-                  context: context,
-                  delegate: CustomSearchDelegate(),
-                );
+                context.read<MainProvider>().searchBar(context);
               },
               icon: const Icon(Icons.search),
             ),

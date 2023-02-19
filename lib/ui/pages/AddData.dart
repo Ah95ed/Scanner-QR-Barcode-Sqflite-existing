@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
@@ -12,7 +13,9 @@ class AddData extends StatelessWidget {
   TextEditingController barcode = TextEditingController();
   TextEditingController cost = TextEditingController();
   TextEditingController sell = TextEditingController();
+  String? code;
 
+  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   @override
   Widget build(BuildContext context) {
     barcode.text = context.watch<MainProvider>().barcodeScanRes.toString();
@@ -26,8 +29,12 @@ class AddData extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Provider.of<MainProvider>(context, listen: false)
-                  .openCamera(context);
+              _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+                context: context,
+                onCode: (code) {
+                  barcode.text = code.toString();
+                },
+              );
             },
             icon: const Icon(Icons.camera_alt_outlined),
           ),
@@ -41,11 +48,12 @@ class AddData extends StatelessWidget {
           "${cost.text}","${sell.text}")
           ''');
           if (response! > 0) {
+            Navigator.of(context).pop();
             // Fluttertoast.showToast(
             //     msg: " ${name.text}تمت اَضافة ",
             //     gravity: ToastGravity.CENTER,
             //     toastLength: Toast.LENGTH_SHORT);
-          } else {}
+          }
         },
         tooltip: 'Add',
         backgroundColor: const Color.fromARGB(255, 150, 0, 72),
@@ -62,43 +70,26 @@ class AddData extends StatelessWidget {
               child: Column(
             key: formState,
             children: [
-              TextField(
-                "sell",
-                controller: sell,
+              TextFormField(
+                controller: name,
+                decoration: const InputDecoration(hintText: 'Name'),
               ),
               TextFormField(
                 controller: barcode,
-                decoration: const InputDecoration(hintText: 'barcode'),
+                decoration: const InputDecoration(hintText: 'Barcode'),
               ),
-              TextField(
-                "sell",
-                controller: sell,
+              TextFormField(
+                controller: cost,
+                decoration: const InputDecoration(hintText: 'Cost'),
               ),
-              TextField(
-                "sell",
+              TextFormField(
                 controller: sell,
+                decoration: const InputDecoration(hintText: 'Sell'),
               ),
             ],
           ))
         ],
       ),
-    );
-  }
-}
-
-class TextField extends StatelessWidget {
-  final String? hint;
-  TextEditingController controller = TextEditingController();
-
-  TextField(String s, {Key? key, this.hint, required this.controller})
-      : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      decoration: InputDecoration(
-        hintText: hint,
-      ),
-      controller: controller,
     );
   }
 }
