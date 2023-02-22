@@ -38,12 +38,11 @@ class CustomSearchDelegate extends SearchDelegate {
     context.watch<MainProvider>().getDataAll();
     var result = context.watch<MainProvider>().todoItem;
     List<User> users = [];
-    query = resultes.toString();
+    // query = resultes.toString();
     for (int i = 0; i < result.length; i++) {
       if (result[i].barcode.toLowerCase().contains(query.toLowerCase())) {
         users.add(result[i]);
-        context.read<MainProvider>().barcodeScanRes = '';
-        break;
+        // break;
       }
     }
     return ListView.builder(
@@ -62,11 +61,10 @@ class CustomSearchDelegate extends SearchDelegate {
     var result = context.watch<MainProvider>().todoItem;
     context.watch<MainProvider>().getDataAll();
     List<User> users = [];
-    query = resultes.toString();
     for (int i = 0; i < result.length; i++) {
       if (result[i].barcode.toLowerCase().contains(query.toLowerCase())) {
         users.add(result[i]);
-        break;
+        // break;
       }
     }
     return ListView.builder(

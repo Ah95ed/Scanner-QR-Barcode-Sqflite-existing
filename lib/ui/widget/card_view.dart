@@ -145,29 +145,10 @@ class _CardViewState extends State<CardView> {
                               Navigator.of(context).pop();
                             },
                           ),
-                          // TextButton(
-                          //   child: const Text('OpenCamery'),
-                          //   onPressed: () async {
-                          //     await provider.openCamera(context);
-                          //   },
-                          // ),
                         ],
                       );
                     },
                   );
-                  // return await Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (context) {
-                  //       return ShowInformation(
-                  //         named: provid.name,
-                  //         barcoded: provid.barcode,
-                  //         selld: provid.sell,
-                  //         idd: provid.id,
-                  //         costd: provid.cost,
-                  //       );
-                  //     },
-                  //   ),
-                  // );
                 } else if (di == DismissDirection.startToEnd) {
                   showDialog(
                     context: context,

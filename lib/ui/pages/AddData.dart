@@ -32,7 +32,7 @@ class AddData extends StatelessWidget {
               _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
                 context: context,
                 onCode: (code) {
-                  barcode.text = code.toString();
+                  barcode.text == null ? 'pugs' : code.toString();
                 },
               );
             },
@@ -49,10 +49,6 @@ class AddData extends StatelessWidget {
           ''');
           if (response! > 0) {
             Navigator.of(context).pop();
-            // Fluttertoast.showToast(
-            //     msg: " ${name.text}تمت اَضافة ",
-            //     gravity: ToastGravity.CENTER,
-            //     toastLength: Toast.LENGTH_SHORT);
           }
         },
         tooltip: 'Add',
