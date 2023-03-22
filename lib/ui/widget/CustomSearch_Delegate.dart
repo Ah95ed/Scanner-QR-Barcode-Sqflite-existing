@@ -4,7 +4,7 @@ import '../../Utils/stateManagment/provider.dart';
 import '../../model/User.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
-  String? resultes;
+  late String resultes;
   CustomSearchDelegate({required this.resultes});
 
   @override
@@ -40,7 +40,7 @@ class CustomSearchDelegate extends SearchDelegate {
     List<User> users = [];
     // query = resultes.toString();
     for (int i = 0; i < result.length; i++) {
-      if (result[i].barcode.toLowerCase().contains(query.toLowerCase())) {
+      if (result[i].barcode.toLowerCase().contains(resultes.toLowerCase())) {
         users.add(result[i]);
         // break;
       }

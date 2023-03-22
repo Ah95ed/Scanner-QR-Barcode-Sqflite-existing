@@ -205,19 +205,4 @@ class _CardViewState extends State<CardView> {
   }
 }
 
-class Search extends StatelessWidget {
-  Search({super.key});
-  TextEditingController controller = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      cursorHeight: 12.0,
-      decoration: const InputDecoration(
-        labelText: 'Search',
-        hintText: 'البحث',
-      ),
-      controller: controller,
-    );
-  }
-}

@@ -4,8 +4,18 @@ import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 
-class AddData extends StatelessWidget {
-  AddData({Key? key}) : super(key: key);
+class AddData extends StatefulWidget {
+  const AddData({Key? key}) : super(key: key);
+
+
+@override
+  State<AddData> createState() => _AddData();
+}
+
+
+class _AddData extends State<AddData> {
+
+
 
   DataBaseHelper db = DataBaseHelper.dataBaseHelper;
   GlobalKey<FormState> formState = GlobalKey();
@@ -13,12 +23,12 @@ class AddData extends StatelessWidget {
   TextEditingController barcode = TextEditingController();
   TextEditingController cost = TextEditingController();
   TextEditingController sell = TextEditingController();
-  String? code;
+
 
   final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   @override
   Widget build(BuildContext context) {
-    barcode.text = context.watch<MainProvider>().barcodeScanRes.toString();
+    // barcode.text = context.watch<MainProvider>().barcodeScanRes.toString();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -32,7 +42,10 @@ class AddData extends StatelessWidget {
               _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
                 context: context,
                 onCode: (code) {
-                  barcode.text == null ? 'pugs' : code.toString();
+                  setState(() {
+                    barcode.text = code.toString();
+                  });
+            
                 },
               );
             },
@@ -88,4 +101,5 @@ class AddData extends StatelessWidget {
       ),
     );
   }
+ 
 }

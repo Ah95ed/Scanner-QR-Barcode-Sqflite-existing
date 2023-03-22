@@ -30,19 +30,20 @@ class MainProvider extends ChangeNotifier {
     _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
       context: context,
       onCode: (code) {
-        barcodeScanRes = code.toString();
-        searchBar(context);
+        // barcodeScanRes = code.toString();
+        searchBar(context,code.toString());
         notifyListeners();
       },
     );
     notifyListeners();
   }
 
-  void searchBar(BuildContext context) {
+  void searchBar(BuildContext context,String barcode) {
     showSearch(
       context: context,
-      delegate: CustomSearchDelegate(resultes: barcodeScanRes),
+      delegate: CustomSearchDelegate(resultes: barcode),
     );
+    notifyListeners();
   }
 
   Future updateName(String name, String id) async {

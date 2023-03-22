@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
 import 'package:scanner_qr_barcode/ui/widget/CameraUp.dart';
-import 'package:scanner_qr_barcode/ui/widget/CustomSearch_Delegate.dart';
 import 'package:scanner_qr_barcode/ui/widget/card_view.dart';
 import 'AddData.dart';
 
