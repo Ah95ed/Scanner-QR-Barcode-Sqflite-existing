@@ -1,29 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/Utils/stateManagment/provider.dart';
+import 'package:scanner_qr_barcode/model/stateManagment/provider.dart';
 
-class ShowInformation extends StatefulWidget {
-  String named;
-  String barcoded;
-  String costd;
-  String selld;
-  String idd;
-// bool isUpdate
-  ShowInformation({
-    Key? key,
-    required this.named,
-    required this.barcoded,
-    required this.costd,
-    required this.selld,
-    required this.idd,
-  }) : super(key: key);
+class ShowInformation extends StatelessWidget {
+  static const route = "/ShowInformation";
 
-  @override
-  State<ShowInformation> createState() => _ShowInformationState();
-}
-
-class _ShowInformationState extends State<ShowInformation> {
   GlobalKey<FormState> formState = GlobalKey();
 
   TextEditingController name = TextEditingController();
@@ -34,26 +16,12 @@ class _ShowInformationState extends State<ShowInformation> {
 
   TextEditingController sell = TextEditingController();
 
-  DataBaseHelper db = DataBaseHelper.dataBaseHelper;
-  late String _id;
-  @override
-  void initState() {
-    name.text = widget.named;
-    barcode.text = widget.barcoded;
-    cost.text = widget.costd;
-    sell.text = widget.selld;
-    _id = widget.idd;
-    super.initState();
-  }
+  DataBaseHelper? _db ;
 
-  @override
-  void dispose() {
-    name.dispose();
-    barcode.dispose();
-    cost.dispose();
-    sell.dispose();
-    super.dispose();
+  ShowInformation({super.key}) {
+    _db = DataBaseHelper();
   }
+  late String _id;
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +43,8 @@ class _ShowInformationState extends State<ShowInformation> {
       body: ListView(
         padding: const EdgeInsets.all(20.0),
         children: [
-          Form(
+          Expanded(
+            flex: 1,
             child: Column(
               key: formState,
               children: [

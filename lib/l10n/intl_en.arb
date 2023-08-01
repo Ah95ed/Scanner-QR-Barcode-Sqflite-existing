@@ -1,0 +1,11 @@
+{
+    "name": "Name : ",
+    "mainScreen": "Main Screen",
+    "isempty": "IsEmpty",
+    "addData": "Add Data",
+    "barcode": "Barcode",
+    "cost": "Cost",
+    "sell": "Sell : ",
+    "done": "Done",
+    "error": "Error"
+}

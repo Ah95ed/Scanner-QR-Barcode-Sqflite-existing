@@ -14,15 +14,15 @@ class DataBaseHelper {
   static const BarCode = 'Barcode';
   static const Cost = 'Cost';
   static const Sell = 'Sell';
-  DataBaseHelper._privateConstructor();
-  static DataBaseHelper dataBaseHelper = DataBaseHelper._privateConstructor();
-  static Database? _database;
+  // DataBaseHelper._privateConstructor();
+
+  Database? _database;
 
   Future<Database?> get database async {
     if (_database != null) {
       return _database;
     } else if (Platform.isWindows || Platform.isLinux) {
-      return await null;
+      return null;
     } else {
       return await initDataBase();
     }
@@ -52,43 +52,30 @@ class DataBaseHelper {
   }
 
   //insert
-  Future<int?> insert(String sql) async {
+  Future<int?> insert(
+    String name,
+    String barcode,
+    String cost,
+    String sell,
+  ) async {
     Database? db = await database;
-    return await db?.rawInsert(sql);
+    return await db!.rawInsert(
+        'INSERT INTO $TableName ($Name, $BarCode,$Cost,$Sell) VALUES($name, $barcode,$cost,$sell)');
   }
 
 //SelectAll
-  static Future<List<Map<String, dynamic>?>?> getAllUser(
+  Future<List<Map<String, dynamic>?>?> getAllUser(
       String skip, String limit) async {
-    Database? db = await DataBaseHelper.initDataBase();
-    var result = await db.rawQuery(
+    Database? db = await database;
+    var result = await db!.rawQuery(
         'SELECT * FROM $TableName  WHERE ID > $skip ORDER BY ID LIMIT $limit');
-    // SELECT *
-    //     FROM MyTable
-    // WHERE (SomeColumn, OtherColumn) > (LastSome, LastOther)
-    // ORDER BY SomeColumn, OtherColumn
-    // LIMIT 100;
-    // var result = await db.query(tableName);
+
     return result.toList();
-    // db.close();
   }
 
-//   static Future<List<Map<String, dynamic>?>?>
-//   getAllUser(String table) async {
-//
-//     final db = await DataBaseHelper.initDataBase();
-//     return db.query(table);
-//   }
-  readData(String sql) async {
-    Database? db = await database;
-    List<Map> response = await db!.rawQuery(sql);
-    // db.close();
-    return response;
-  }
-
-  Future<List> searchBar() async {
-    Database? db = await database;
-    return db!.query(TableName);
+  static Future<List> searchBar(String name) async {
+    Database? db = await DataBaseHelper.initDataBase();
+    return db.query(TableName, where: Name, whereArgs: [name]);
   }
 
   static Future update(
@@ -102,24 +89,60 @@ class DataBaseHelper {
         where: 'ID = ?', whereArgs: [id]);
   }
 
-  static Future<List<Map<String, dynamic>?>?> dataAll() async {
-    Database? db = await dataBaseHelper.database;
-    var response = db?.rawQuery("SELECT * FROM Ahmed");
-    return response;
-  }
+
 
   // delete
-  static Future<Future<int>?> delete(String id) async {
-    Database? db = await dataBaseHelper.database;
+  Future<Future<int>?> delete(String id) async {
+    Database? db = await database;
     return db?.rawDelete(
       'DELETE FROM Ahmed WHERE id = ?',
       [id],
     );
   }
 
-  static Future<List<Map<String, dynamic>>?> search(String name) async {
-    Database? db = await dataBaseHelper.database;
-    return await db?.query(DataBaseHelper.TableName,
-        where: "Name LIKE ?", whereArgs: ['%$name']);
+  Future<List<Map<String, dynamic>>> searchInDatabase(String query) async {
+    Database? db = await database;
+    final List<Map<String, dynamic>> results = await db!.query(
+      TableName,
+      where: '$Name LIKE ?',
+      whereArgs: ['%$query%'],
+    );
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> searchBarCode(String barCode) async {
+    Database? db = await database;
+    final List<Map<String, dynamic>> results = await db!.query(
+      TableName,
+      where: '$BarCode LIKE ?',
+      whereArgs: ['%$barCode%'],
+    );
+    return results;
+  }
+
+  Future<List<Map<String, dynamic>>> searchBarCodeOrder(String barCode) async {
+    Database? db = await database;
+    final List<Map<String, dynamic>> results = await db!.query(
+      TableName,
+      where: '$BarCode LIKE ?',
+      whereArgs: ['%$barCode%'],
+    );
+    return results;
+  }
+
+  Future<int?> addData(
+      String name, String barcode, String cost, String sell) async {
+    Database? db = await database;
+
+    return await db!.insert(
+      TableName,
+      {
+        Name: name,
+        BarCode: barcode,
+        Cost: cost,
+        Sell: sell,
+      },
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
   }
 }

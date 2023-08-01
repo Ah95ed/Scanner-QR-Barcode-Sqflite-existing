@@ -1,7 +1,6 @@
 class User {
   // late int id;
-  String id,name, barcode, cost, sell;
-
+  String id, name, barcode, cost, sell;
 
   User({
     required this.name,
@@ -10,6 +9,5 @@ class User {
     required this.sell,
     required this.id,
   });
-
 
 }
