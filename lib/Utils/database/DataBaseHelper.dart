@@ -1,9 +1,10 @@
 import 'dart:core';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
   static const dataBaseName = "pharmacy.db";
@@ -73,6 +74,11 @@ class DataBaseHelper {
     return result.toList();
   }
 
+  Future<List<Map<String, dynamic>>> getAllData() async {
+    Database? db = await database;
+    return await db!.query(TableName);
+  }
+
   static Future<List> searchBar(String name) async {
     Database? db = await DataBaseHelper.initDataBase();
     return db.query(TableName, where: Name, whereArgs: [name]);
@@ -88,8 +94,6 @@ class DataBaseHelper {
     return await db.update(Table, {Column: valus},
         where: 'ID = ?', whereArgs: [id]);
   }
-
-
 
   // delete
   Future<Future<int>?> delete(String id) async {

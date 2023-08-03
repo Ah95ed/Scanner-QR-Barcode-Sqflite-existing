@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: Home.route,
           routes: {
-            Home.route: (context) => const Home(),
+            Home.route: (context) =>  Home(),
             ShowInformation.route: (context) => ShowInformation(),
             QRViewExample.route: (context) => QRViewExample(),
             AddData.route: (context) => AddData(),

@@ -22,14 +22,32 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "ExportedisDone":
+            MessageLookupByLibrary.simpleMessage("Exported Is Done"),
         "addData": MessageLookupByLibrary.simpleMessage("Add Data"),
         "barcode": MessageLookupByLibrary.simpleMessage("Barcode"),
+        "close": MessageLookupByLibrary.simpleMessage("Close"),
+        "confirmeDelete":
+            MessageLookupByLibrary.simpleMessage("Are you sure to delete"),
         "cost": MessageLookupByLibrary.simpleMessage("Cost"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
+        "edit": MessageLookupByLibrary.simpleMessage("Edit"),
+        "editData": MessageLookupByLibrary.simpleMessage("Edit Data"),
         "error": MessageLookupByLibrary.simpleMessage("Error"),
+        "export": MessageLookupByLibrary.simpleMessage("Export"),
+        "home": MessageLookupByLibrary.simpleMessage("Home"),
+        "import": MessageLookupByLibrary.simpleMessage("Import"),
         "isempty": MessageLookupByLibrary.simpleMessage("IsEmpty"),
         "mainScreen": MessageLookupByLibrary.simpleMessage("Main Screen"),
         "name": MessageLookupByLibrary.simpleMessage("Name : "),
-        "sell": MessageLookupByLibrary.simpleMessage("Sell : ")
+        "no": MessageLookupByLibrary.simpleMessage("No"),
+        "orders_account":
+            MessageLookupByLibrary.simpleMessage("Orders Account"),
+        "sell": MessageLookupByLibrary.simpleMessage("Sell : "),
+        "setting": MessageLookupByLibrary.simpleMessage("Settings"),
+        "team_policy": MessageLookupByLibrary.simpleMessage(
+            "Terms of Service | Privacy Policy"),
+        "wait": MessageLookupByLibrary.simpleMessage("Waiting ... "),
+        "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
 }

@@ -1,17 +1,24 @@
 import 'dart:developer';
+import 'dart:io';
+
+import 'package:csv/csv.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/main.dart';
 import 'package:scanner_qr_barcode/model/User.dart';
 import 'package:sizer/sizer.dart';
+
 import '../../generated/l10n.dart';
 
 class MainProvider extends ChangeNotifier {
   List<User> todoItem = [];
   List<User> copys = [];
   List<User> search = [];
+  List<User> allItems = [];
   DataBaseHelper? _baseHelper;
   QRViewController? qrcontroller;
   Widget title = Text(S().mainScreen);
@@ -41,7 +48,6 @@ class MainProvider extends ChangeNotifier {
         },
       );
     } else {
-      // copys = todoItem;
       todoItem = copys;
       copys = [];
       search = [];
@@ -52,31 +58,47 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> searchName(String? name) async {
-  //   if (name!.isEmpty) return;
-
-  //   List<Map<String, dynamic>>? result = await _baseHelper(name);
-  //   List<User> re = result!
-  //       .map(
-  //         (item) => User(
-  //           name: item[DataBaseHelper.Name],
-  //           barcode: item[DataBaseHelper.BarCode] ?? '',
-  //           cost: item[DataBaseHelper.Cost],
-  //           sell: item[DataBaseHelper.Sell],
-  //           id: item[DataBaseHelper.id].toString(),
-  //         ),
-  //       )
-  //       .toList();
-  //   re = todoItem;
-  //   notifyListeners();
-  // }
-
   Future<void> manageScreen(BuildContext context, String route) async {
     Navigator.pushNamed(context, route);
     notifyListeners();
   }
 
-  List<User> orders = [];
+  Future<void> exportData(BuildContext context) async {
+    await getAllData();
+    await Future.delayed(
+      const Duration(seconds: 2),
+      () async {
+        if (allItems.isEmpty) return;
+
+        final data = allItems.map((row) {
+          List t = [];
+          t.add(row.name);
+          t.add(row.barcode);
+          t.add(row.cost);
+          t.add(row.sell);
+          t.add(row.id);
+          return t.toList();
+        }).toList();
+        await Permission.storage.request();
+        await Permission.manageExternalStorage.request();
+        final p = await Permission.accessMediaLocation.request();
+
+        if (p.isGranted) {
+          String? result = await FilePicker.platform.getDirectoryPath();
+          if (result != null) {
+            final file = File('$result/data.csv');
+            String? csvString = const ListToCsvConverter().convert(data);
+            await file
+                .writeAsString(csvString)
+                .whenComplete(() => ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(S.of(context).ExportedisDone)),
+                    ));
+          }
+        }
+        notifyListeners();
+      },
+    );
+  }
 
   Future<void> searchInData(String name) async {
     List<Map<String, dynamic>>? result =
@@ -170,21 +192,21 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> getAllData() async {
-  //   final data = await DataBaseHelper.dataAll();
-  //   todoItem = data!
-  //       .map(
-  //         (e) => User(
-  //           name: e!['Name'].toString(),
-  //           barcode: e['Barcode'].toString(),
-  //           cost: e['Cost'].toString(),
-  //           sell: e['Sell'].toString(),
-  //           id: e['ID'].toString(),
-  //         ),
-  //       )
-  //       .toList();
-  //   notifyListeners();
-  // }
+  Future<void> getAllData() async {
+    final data = await _baseHelper!.getAllData();
+    allItems = data
+        .map(
+          (e) => User(
+            name: e['Name'].toString(),
+            barcode: e['Barcode'].toString(),
+            cost: e['Cost'].toString(),
+            sell: e['Sell'].toString(),
+            id: e['ID'].toString(),
+          ),
+        )
+        .toList();
+    notifyListeners();
+  }
 
   Future<void> paginationData() async {
     if (todoItem.isEmpty) {
@@ -312,7 +334,7 @@ class MainProvider extends ChangeNotifier {
   Future insertData(
       String name, String barcode, String cost, String sell) async {
     final cctx = navigatorKey.currentContext;
-    Future<int?> result =  _baseHelper!.addData(name, barcode, cost, sell);
+    Future<int?> result = _baseHelper!.addData(name, barcode, cost, sell);
     int? response = await result;
     if (response! > 0) {
       ScaffoldMessenger.of(cctx!).showSnackBar(
@@ -321,7 +343,7 @@ class MainProvider extends ChangeNotifier {
         ),
       );
       notifyListeners();
-    }else{
+    } else {
       ScaffoldMessenger.of(cctx!).showSnackBar(
         SnackBar(
           // ignore: use_build_context_synchronously

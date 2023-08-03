@@ -139,6 +139,146 @@ class S {
       args: [],
     );
   }
+
+  /// `Waiting ... `
+  String get wait {
+    return Intl.message(
+      'Waiting ... ',
+      name: 'wait',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit`
+  String get edit {
+    return Intl.message(
+      'Edit',
+      name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Close`
+  String get close {
+    return Intl.message(
+      'Close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure to delete`
+  String get confirmeDelete {
+    return Intl.message(
+      'Are you sure to delete',
+      name: 'confirmeDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Yes`
+  String get yes {
+    return Intl.message(
+      'Yes',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No`
+  String get no {
+    return Intl.message(
+      'No',
+      name: 'no',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit Data`
+  String get editData {
+    return Intl.message(
+      'Edit Data',
+      name: 'editData',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Home`
+  String get home {
+    return Intl.message(
+      'Home',
+      name: 'home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Settings`
+  String get setting {
+    return Intl.message(
+      'Settings',
+      name: 'setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Orders Account`
+  String get orders_account {
+    return Intl.message(
+      'Orders Account',
+      name: 'orders_account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Export`
+  String get export {
+    return Intl.message(
+      'Export',
+      name: 'export',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Import`
+  String get import {
+    return Intl.message(
+      'Import',
+      name: 'import',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Exported Is Done`
+  String get ExportedisDone {
+    return Intl.message(
+      'Exported Is Done',
+      name: 'ExportedisDone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Terms of Service | Privacy Policy`
+  String get team_policy {
+    return Intl.message(
+      'Terms of Service | Privacy Policy',
+      name: 'team_policy',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -7,5 +7,19 @@
     "cost": "Cost",
     "sell": "Sell : ",
     "done": "Done",
-    "error": "Error"
+    "error": "Error",
+    "wait": "Waiting ... ",
+    "edit": "Edit",
+    "close": "Close",
+    "confirmeDelete": "Are you sure to delete",
+    "yes": "Yes",
+    "no": "No",
+    "editData": "Edit Data",
+    "home": "Home",
+    "setting": "Settings",
+    "orders_account": "Orders Account",
+    "export": "Export",
+    "import": "Import",
+    "ExportedisDone": "Exported Is Done",
+    "team_policy": "Terms of Service | Privacy Policy"
 }

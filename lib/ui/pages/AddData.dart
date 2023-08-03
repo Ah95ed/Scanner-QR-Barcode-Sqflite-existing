@@ -93,6 +93,7 @@ class AddData extends StatelessWidget {
                   SizedBox(
                     height: 2.h,
                   ),
+                  
                   TextFormField(
                     controller: sell,
                     decoration: InputDecoration(
@@ -107,8 +108,8 @@ class AddData extends StatelessWidget {
                     height: 3.h,
                   ),
                   OutlinedButton(
-                    onPressed: () {
-                      value.insertData(
+                    onPressed: () async {
+                      await value.insertData(
                         name.text,
                         value.barcode.text,
                         cost.text,
