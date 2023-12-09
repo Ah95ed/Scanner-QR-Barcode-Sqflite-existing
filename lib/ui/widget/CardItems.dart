@@ -1,14 +1,12 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:scanner_qr_barcode/generated/l10n.dart';
 import 'package:scanner_qr_barcode/model/stateManagment/provider.dart';
-import 'DismissibleWidget.dart';
+import 'CardProfessions.dart';
 
 class CardView extends StatelessWidget {
-  CardView({super.key});
+  const CardView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +30,12 @@ class CardView extends StatelessWidget {
                 itemCount:
                     v.isLaodingMore ? v.todoItem.length + 1 : v.todoItem.length,
                 itemBuilder: (context, index) {
-                  return DismissibleWidget(
-                    v: v,
-                    index: index,
-                  );
+                  return CardItems(
+                      name: v.todoItem[index].name,
+                      barcode: v.todoItem[index].barcode,
+                      sell: v.todoItem[index].sell,
+                      cost: v.todoItem[index].cost,
+                      id: v.todoItem[index].id);
                 },
               );
       }),

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:scanner_qr_barcode/ui/pages/AddData.dart';
+import 'package:scanner_qr_barcode/ui/pages/EditData.dart';
 import 'package:scanner_qr_barcode/ui/pages/Home.dart';
 import 'package:scanner_qr_barcode/ui/pages/ShowInformation.dart';
 import 'package:scanner_qr_barcode/ui/pages/QRViewExample.dart';
+import 'package:scanner_qr_barcode/ui/pages/UpdatePrice.dart';
 import 'package:sizer/sizer.dart';
 import 'package:scanner_qr_barcode/model/stateManagment/provider.dart';
 import 'generated/l10n.dart';
@@ -39,10 +41,12 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: Home.route,
           routes: {
-            Home.route: (context) =>  Home(),
+            Home.route: (context) => const Home(),
             ShowInformation.route: (context) => ShowInformation(),
-            QRViewExample.route: (context) => QRViewExample(),
+            QRViewExample.route: (context) => const QRViewExample(),
             AddData.route: (context) => AddData(),
+            UpdatePrice.route: (context) => UpdatePrice(),
+            EditData.route: (context) => EditData(),
           },
           navigatorKey: navigatorKey,
         );

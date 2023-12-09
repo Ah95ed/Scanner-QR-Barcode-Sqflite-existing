@@ -50,10 +50,10 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Name : `
+  /// `Name :`
   String get name {
     return Intl.message(
-      'Name : ',
+      'Name :',
       name: 'name',
       desc: '',
       args: [],
@@ -90,20 +90,20 @@ class S {
     );
   }
 
-  /// `Barcode`
+  /// `Barcode :`
   String get barcode {
     return Intl.message(
-      'Barcode',
+      'Barcode :',
       name: 'barcode',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cost`
+  /// `Cost :`
   String get cost {
     return Intl.message(
-      'Cost',
+      'Cost :',
       name: 'cost',
       desc: '',
       args: [],
@@ -279,6 +279,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Update Prices`
+  String get update_prices {
+    return Intl.message(
+      'Update Prices',
+      name: 'update_prices',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete All Data`
+  String get delete_all {
+    return Intl.message(
+      'Delete All Data',
+      name: 'delete_all',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Cost`
+  String get update_cost {
+    return Intl.message(
+      'Update Cost',
+      name: 'update_cost',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Update Sell`
+  String get update_sell {
+    return Intl.message(
+      'Update Sell',
+      name: 'update_sell',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Delete`
+  String get delete {
+    return Intl.message(
+      'Delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select`
+  String get select {
+    return Intl.message(
+      'Select',
+      name: 'select',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -287,6 +347,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ar'),
     ];
   }
 

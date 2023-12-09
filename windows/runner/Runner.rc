@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example" "\0"
+            VALUE "CompanyName", "com.scannerCode.Alqdees.scanner_qr_barcode" "\0"
             VALUE "FileDescription", "scanner_qr_barcode" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "scanner_qr_barcode" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2023 com.example. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2023 com.scannerCode.Alqdees.scanner_qr_barcode. All rights reserved." "\0"
             VALUE "OriginalFilename", "scanner_qr_barcode.exe" "\0"
             VALUE "ProductName", "scanner_qr_barcode" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

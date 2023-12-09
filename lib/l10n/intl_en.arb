@@ -1,10 +1,10 @@
 {
-    "name": "Name : ",
+    "name": "Name :",
     "mainScreen": "Main Screen",
     "isempty": "IsEmpty",
     "addData": "Add Data",
-    "barcode": "Barcode",
-    "cost": "Cost",
+    "barcode": "Barcode :",
+    "cost": "Cost :",
     "sell": "Sell : ",
     "done": "Done",
     "error": "Error",
@@ -21,5 +21,11 @@
     "export": "Export",
     "import": "Import",
     "ExportedisDone": "Exported Is Done",
-    "team_policy": "Terms of Service | Privacy Policy"
+    "team_policy": "Terms of Service | Privacy Policy",
+    "update_prices": "Update Prices",
+    "delete_all": "Delete All Data",
+    "update_cost": "Update Cost",
+    "update_sell": "Update Sell",
+    "delete": "Delete",
+    "select": "Select"
 }

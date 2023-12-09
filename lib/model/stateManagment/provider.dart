@@ -1,7 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:csv/csv.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,7 +10,6 @@ import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/main.dart';
 import 'package:scanner_qr_barcode/model/User.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../generated/l10n.dart';
 
 class MainProvider extends ChangeNotifier {
@@ -21,7 +19,8 @@ class MainProvider extends ChangeNotifier {
   List<User> allItems = [];
   DataBaseHelper? _baseHelper;
   QRViewController? qrcontroller;
-  Widget title = Text(S().mainScreen);
+  int currentIndex = 0;
+  Widget title = const Text('');
   Icon actionsicon = const Icon(Icons.search);
   final TextEditingController text = TextEditingController();
   TextEditingController barcode = TextEditingController();
@@ -31,7 +30,7 @@ class MainProvider extends ChangeNotifier {
     _baseHelper ??= DataBaseHelper();
   }
 
-  Future<void> changeWidget() async {
+  Future<void> changeWidget({String? name}) async {
     if (actionsicon.icon == Icons.search) {
       copys = todoItem;
 
@@ -40,7 +39,7 @@ class MainProvider extends ChangeNotifier {
         controller: text,
         keyboardType: TextInputType.text,
         style: TextStyle(
-            fontSize: 16.sp, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 10.sp, fontWeight: FontWeight.bold, color: Colors.white),
         textAlign: TextAlign.start,
         autofocus: true,
         onChanged: (value) {
@@ -53,57 +52,133 @@ class MainProvider extends ChangeNotifier {
       search = [];
       text.text = '';
       actionsicon = const Icon(Icons.search);
-      title = Text(S().mainScreen);
+      title = Text(name!);
     }
     notifyListeners();
   }
 
-  Future<void> manageScreen(BuildContext context, String route) async {
-    Navigator.pushNamed(context, route);
+  Widget ti = const Text('');
+  Future<void> changeWidgetInOrder({String? name}) async {
+    ti = DropdownSearch<User>(
+      popupProps: const PopupProps.menu(
+        showSelectedItems: true,
+      ),
+      items: drops,
+      dropdownDecoratorProps: const DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+          labelText: "Menu mode",
+          hintText: "country in menu mode",
+        ),
+      ),
+      onChanged: print,
+      selectedItem: null,
+    );
+    notifyListeners();
+  }
+
+  List<User> drops = [];
+
+  Future<void> searchInOerderPage(String name) async {
+    List<Map<String, dynamic>> result =
+        await _baseHelper!.searchInDatabase(name);
+    drops = result
+        .map(
+          (item) => User(
+            name: item[DataBaseHelper.Name],
+            barcode: item[DataBaseHelper.BarCode] ?? '',
+            cost: item[DataBaseHelper.Cost] ?? '',
+            sell: item[DataBaseHelper.Sell],
+            id: item[DataBaseHelper.id].toString(),
+          ),
+        )
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> deleteAll() async {
+    await _baseHelper!.deleteAll();
+    todoItem = [];
+    notifyListeners();
+  }
+
+  Future<void> manageScreen(BuildContext context, String route,
+      {Object? object}) async {
+    Navigator.pushNamed(context, route, arguments: object);
     notifyListeners();
   }
 
   Future<void> exportData(BuildContext context) async {
     await getAllData();
-    await Future.delayed(
-      const Duration(seconds: 2),
-      () async {
-        if (allItems.isEmpty) return;
 
-        final data = allItems.map((row) {
-          List t = [];
-          t.add(row.name);
-          t.add(row.barcode);
-          t.add(row.cost);
-          t.add(row.sell);
-          t.add(row.id);
-          return t.toList();
-        }).toList();
-        await Permission.storage.request();
-        await Permission.manageExternalStorage.request();
-        final p = await Permission.accessMediaLocation.request();
+    if (allItems.isEmpty) return;
 
-        if (p.isGranted) {
-          String? result = await FilePicker.platform.getDirectoryPath();
-          if (result != null) {
-            final file = File('$result/data.csv');
-            String? csvString = const ListToCsvConverter().convert(data);
-            await file
-                .writeAsString(csvString)
-                .whenComplete(() => ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(S.of(context).ExportedisDone)),
-                    ));
-          }
-        }
-        notifyListeners();
-      },
-    );
+    final data = allItems.map((row) {
+      List t = [];
+      t.add(row.name);
+      t.add(row.barcode);
+      t.add(row.cost);
+      t.add(row.sell);
+      t.add(row.id);
+      return t.toList();
+    }).toList();
+    await Permission.storage.request();
+    await Permission.manageExternalStorage.request();
+    final p = await Permission.accessMediaLocation.request();
+
+    if (p.isGranted) {
+      String? result = await FilePicker.platform.getDirectoryPath();
+      if (result != null) {
+        final file = File('$result/data.csv');
+        String? csvString = const ListToCsvConverter().convert(data);
+        await file
+            .writeAsString(csvString)
+            .whenComplete(() => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(S.of(context).ExportedisDone)),
+                ));
+      }
+    }
+    notifyListeners();
   }
 
+  Future<void> importData() async {
+    await Permission.storage.request();
+    await Permission.manageExternalStorage.request();
+    final p = await Permission.accessMediaLocation.request();
+    if (p.isGranted) {
+      FilePickerResult? result = await 
+      FilePicker.platform.pickFiles(
+        type: FileType.any,
+      );
+
+      if (result != null) {
+        File file = File(result.files.single.path!);
+        List<String> csvLines = await file.readAsLines();
+
+        for (String element in csvLines) {
+          List<String> name = element.split(',');
+          List<String> barcode = element.split(',');
+          List<String> cost = element.split(',');
+          List<String> sell = element.split(',');
+          List<String> id = element.split(',');
+          if (int.parse(id[4].toString()) == (limit + limit)) {
+            paginationData();
+          }
+          insertData(
+            name[0],
+            barcode[1],
+            cost[2],
+            sell[3],
+          );
+        }
+      }
+    }
+  }
+
+  List<User> newResult = [];
   Future<void> searchInData(String name) async {
     List<Map<String, dynamic>>? result =
         await _baseHelper?.searchInDatabase(name);
-    List<User> newResult = result!
+    newResult = result!
         .map(
           (item) => User(
             name: item[DataBaseHelper.Name],
@@ -119,14 +194,54 @@ class MainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<User> searchOrdr = [];
+  List<User> searchList = [];
+  Future<void> searchInDataInOrder(String name) async {
+    List<Map<String, dynamic>>? result =
+        await _baseHelper?.searchInDatabase(name);
+    searchOrdr = result!
+        .map(
+          (item) => User(
+            name: item[DataBaseHelper.Name],
+            barcode: item[DataBaseHelper.BarCode] ?? '',
+            cost: item[DataBaseHelper.Cost] ?? '',
+            sell: item[DataBaseHelper.Sell],
+            id: item[DataBaseHelper.id].toString(),
+          ),
+        )
+        .toList();
+
+    notifyListeners();
+  }
+
+  void addList(User name) {
+    searchList.add(name);
+    notifyListeners();
+  }
+
+  String barCodeEdit = '';
+
   Future<void> openCamera(BuildContext context) async {
     copys = todoItem;
+    if (Platform.isWindows || Platform.isLinux) {
+      return;
+    }
     _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
       context: context,
-      onCode: (code) {
-        searchBarCode(code!);
+      onCode: (code) async {
+        await searchBarCode(code!);
       },
     );
+    notifyListeners();
+  }
+
+  Future<void> updateCostColumn(double newValue) async {
+    await _baseHelper!.updateCostCol(newValue);
+    notifyListeners();
+  }
+
+  Future<void> updateSellColumn(double newValue) async {
+    await _baseHelper!.updateSellCol(newValue);
     notifyListeners();
   }
 
@@ -143,7 +258,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future updateName(String name, String id) async {
-    await DataBaseHelper.update(
+    await _baseHelper!.update(
       DataBaseHelper.TableName,
       DataBaseHelper.Name,
       name,
@@ -153,7 +268,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future updateBarCode(String barcode, String id) async {
-    await DataBaseHelper.update(
+    await  _baseHelper!.update(
       DataBaseHelper.TableName,
       DataBaseHelper.BarCode,
       barcode,
@@ -163,7 +278,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future updateCost(String cost, String id) async {
-    await DataBaseHelper.update(
+    await  _baseHelper!.update(
       DataBaseHelper.TableName,
       DataBaseHelper.Cost,
       cost,
@@ -173,7 +288,7 @@ class MainProvider extends ChangeNotifier {
   }
 
   Future updateSell(String sell, String id) async {
-    await DataBaseHelper.update(
+    await  _baseHelper!.update(
       DataBaseHelper.TableName,
       DataBaseHelper.Sell,
       sell,
@@ -218,8 +333,8 @@ class MainProvider extends ChangeNotifier {
           isLaodingMore = true;
           getPData();
           skip = skip + limit;
-
           isLaodingMore = false;
+          notifyListeners();
         }
       },
     );
@@ -227,6 +342,11 @@ class MainProvider extends ChangeNotifier {
 
   Future<void> getPData() async {
     // DataBaseHelper _baseHelper = DataBaseHelper();
+    // if (Platform.isWindows || Platform.isLinux) {
+    //   final dw = DataBaseWindows();
+    //   dw.initDataBaseWin();
+    //   return;
+    // }
     var dataList =
         await _baseHelper!.getAllUser(skip.toString(), limit.toString());
     var item = dataList!
@@ -238,8 +358,6 @@ class MainProvider extends ChangeNotifier {
               id: items['ID'].toString(),
             ))
         .toList();
-    log('${item.length} ____');
-
     todoItem.addAll(item);
     notifyListeners();
   }
@@ -308,7 +426,7 @@ class MainProvider extends ChangeNotifier {
     if (newResult.isEmpty) {
       ScaffoldMessenger.of(cctx!).showSnackBar(
         SnackBar(
-          content: Text(S.of(cctx).isempty),
+          content: Text(S().isempty),
         ),
       );
       qrcontroller!.resumeCamera();
@@ -337,12 +455,11 @@ class MainProvider extends ChangeNotifier {
     Future<int?> result = _baseHelper!.addData(name, barcode, cost, sell);
     int? response = await result;
     if (response! > 0) {
-      ScaffoldMessenger.of(cctx!).showSnackBar(
-        SnackBar(
-          content: Text(S.of(cctx).done),
-        ),
-      );
-      notifyListeners();
+      // ScaffoldMessenger.of(cctx!).showSnackBar(
+      //   SnackBar(
+      //     content: Text(S.of(cctx).done),
+      //   ),
+      // );
     } else {
       ScaffoldMessenger.of(cctx!).showSnackBar(
         SnackBar(
@@ -351,5 +468,6 @@ class MainProvider extends ChangeNotifier {
         ),
       );
     }
+    notifyListeners();
   }
 }

@@ -1,36 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:scanner_qr_barcode/Utils/constant/Constant.dart';
-import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
-import 'package:scanner_qr_barcode/generated/l10n.dart';
 import 'package:scanner_qr_barcode/model/stateManagment/provider.dart';
 import 'package:sizer/sizer.dart';
+import '../../Utils/constant/Constant.dart';
+import '../../generated/l10n.dart';
+import '../../model/User.dart';
 
-class AddData extends StatelessWidget {
-  static const route = '/AddData';
-
-  DataBaseHelper? _db;
-  AddData({super.key}) {
-    _db = DataBaseHelper();
-  }
-
+class EditData extends StatelessWidget {
+  static const route = '/EditData';
+  EditData({Key? key}) : super(key: key);
   GlobalKey<FormState> formState = GlobalKey();
-
   TextEditingController name = TextEditingController();
-
+  TextEditingController bar = TextEditingController();
   TextEditingController cost = TextEditingController();
-
   TextEditingController sell = TextEditingController();
 
-  // final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   @override
   Widget build(BuildContext context) {
+    User o = ModalRoute.of(context)!.settings.arguments as User;
+    name.text = o.name;
+    bar.text = o.barcode;
+    cost.text = o.cost;
+    sell.text = o.sell;
+    final value = context.read<MainProvider>();
+
     return Consumer<MainProvider>(
       builder: (context, value, child) {
+       TextEditingController? cont= value.barcode.text.isEmpty ? bar : value.barcode;
         return Scaffold(
           appBar: AppBar(
             title: Text(
-              S.of(context).addData,
+              S.of(context).editData,
               style: const TextStyle(color: Colors.white),
             ),
             backgroundColor: ColorUsed.primary,
@@ -45,7 +45,7 @@ class AddData extends StatelessWidget {
           ),
           body: ListView(
             scrollDirection: Axis.vertical,
-            padding: EdgeInsets.all(10.sp),
+            padding: const EdgeInsets.all(14),
             children: [
               Form(
                   child: Column(
@@ -57,9 +57,7 @@ class AddData extends StatelessWidget {
                       labelText: S.of(context).name,
                       border: const OutlineInputBorder(),
                       focusedBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: ColorUsed.primary,
-                        ),
+                        borderSide: BorderSide(color: ColorUsed.primary),
                       ),
                       labelStyle: const TextStyle(
                         color: ColorUsed.primary,
@@ -70,7 +68,8 @@ class AddData extends StatelessWidget {
                     height: 2.h,
                   ),
                   TextFormField(
-                    controller: value.barcode,
+                    controller:
+                       cont ,
                     decoration: InputDecoration(
                         labelText: S.of(context).barcode,
                         border: const OutlineInputBorder(),
@@ -110,15 +109,24 @@ class AddData extends StatelessWidget {
                   ),
                   OutlinedButton(
                     onPressed: () async {
-                      await value.insertData(
-                        name.text,
-                        value.barcode.text,
-                        cost.text,
-                        sell.text,
-                      );
+                      await value.updateName(name.text, o.id);
+                      await value.updateBarCode(cont.text, o.id);
+                      await value.updateCost(cost.text, o.id);
+                      await value.updateSell(sell.text, o.id).whenComplete(
+                            () => ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(S().done),
+                              ),
+                            ),
+                          );
+                      value.todoItem.clear();
+                      value.limit = 20;
+                      value.skip = 0;
+                      value.paginationData();
+
                     },
                     child: Text(
-                      S().addData,
+                      S().editData,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: ColorUsed.primary,

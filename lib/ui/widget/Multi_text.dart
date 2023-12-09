@@ -13,34 +13,28 @@ class MultiText extends StatelessWidget {
       padding: EdgeInsets.all(2.w),
       child: Row(
         children: [
-          SizedBox(
-            height: 1.h,
-          ),
           Expanded(
             flex: 0,
             child: Text(
               con,
               style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 10.sp,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(
-            width: 2.w,
+            width: 0.5.w,
           ),
           Expanded(
             flex: 2,
             child: Text(
               str,
               style: TextStyle(
-                  fontSize: 14.sp,
+                  fontSize: 10.sp,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
-          ),
-          SizedBox(
-            height: 1.h,
           ),
         ],
       ),

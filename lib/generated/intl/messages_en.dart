@@ -25,11 +25,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "ExportedisDone":
             MessageLookupByLibrary.simpleMessage("Exported Is Done"),
         "addData": MessageLookupByLibrary.simpleMessage("Add Data"),
-        "barcode": MessageLookupByLibrary.simpleMessage("Barcode"),
+        "barcode": MessageLookupByLibrary.simpleMessage("Barcode :"),
         "close": MessageLookupByLibrary.simpleMessage("Close"),
         "confirmeDelete":
             MessageLookupByLibrary.simpleMessage("Are you sure to delete"),
-        "cost": MessageLookupByLibrary.simpleMessage("Cost"),
+        "cost": MessageLookupByLibrary.simpleMessage("Cost :"),
+        "delete": MessageLookupByLibrary.simpleMessage("Delete"),
+        "delete_all": MessageLookupByLibrary.simpleMessage("Delete All Data"),
         "done": MessageLookupByLibrary.simpleMessage("Done"),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editData": MessageLookupByLibrary.simpleMessage("Edit Data"),
@@ -39,14 +41,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "import": MessageLookupByLibrary.simpleMessage("Import"),
         "isempty": MessageLookupByLibrary.simpleMessage("IsEmpty"),
         "mainScreen": MessageLookupByLibrary.simpleMessage("Main Screen"),
-        "name": MessageLookupByLibrary.simpleMessage("Name : "),
+        "name": MessageLookupByLibrary.simpleMessage("Name :"),
         "no": MessageLookupByLibrary.simpleMessage("No"),
         "orders_account":
             MessageLookupByLibrary.simpleMessage("Orders Account"),
+        "select": MessageLookupByLibrary.simpleMessage("Select"),
         "sell": MessageLookupByLibrary.simpleMessage("Sell : "),
         "setting": MessageLookupByLibrary.simpleMessage("Settings"),
         "team_policy": MessageLookupByLibrary.simpleMessage(
             "Terms of Service | Privacy Policy"),
+        "update_cost": MessageLookupByLibrary.simpleMessage("Update Cost"),
+        "update_prices": MessageLookupByLibrary.simpleMessage("Update Prices"),
+        "update_sell": MessageLookupByLibrary.simpleMessage("Update Sell"),
         "wait": MessageLookupByLibrary.simpleMessage("Waiting ... "),
         "yes": MessageLookupByLibrary.simpleMessage("Yes")
       };
