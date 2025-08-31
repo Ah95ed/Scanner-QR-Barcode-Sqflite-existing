@@ -1,0 +1,54 @@
+name: POS android CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_android:
+    name: APK Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        abi: [armeabi-v7a, arm64-v8a, x86_64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.35.2'
+
+      
+
+      - name: clean Project
+        run: flutter clean
+        
+      - name: flutter update package 
+        run: flutter pub upgrade
+
+      - name: clean outdated 
+        run: flutter pub outdated
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APKs
+        run: flutter build apk --split-per-abi
+
+      - name: Upload APK Artifacts (Individual Files)
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk-${{ matrix.abi }}
+          path: build/app/outputs/flutter-apk/app-${{ matrix.abi }}-release.apk
+

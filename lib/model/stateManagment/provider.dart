@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:csv/csv.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:scanner_qr_barcode/Utils/database/DataBaseHelper.dart';
 import 'package:scanner_qr_barcode/main.dart';
@@ -25,7 +23,7 @@ class MainProvider extends ChangeNotifier {
   final TextEditingController text = TextEditingController();
   TextEditingController barcode = TextEditingController();
 
-  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
+  // final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
   MainProvider() {
     _baseHelper ??= DataBaseHelper();
   }
@@ -59,20 +57,20 @@ class MainProvider extends ChangeNotifier {
 
   Widget ti = const Text('');
   Future<void> changeWidgetInOrder({String? name}) async {
-    ti = DropdownSearch<User>(
-      popupProps: const PopupProps.menu(
-        showSelectedItems: true,
-      ),
-      items: drops,
-      dropdownDecoratorProps: const DropDownDecoratorProps(
-        dropdownSearchDecoration: InputDecoration(
-          labelText: "Menu mode",
-          hintText: "country in menu mode",
-        ),
-      ),
-      onChanged: print,
-      selectedItem: null,
-    );
+    // ti = DropdownSearch<User>(
+    //   popupProps: const PopupProps.menu(
+    //     showSelectedItems: true,
+    //   ),
+    //   items: drops,
+    //   dropdownDecoratorProps: const DropDownDecoratorProps(
+    //     dropdownSearchDecoration: InputDecoration(
+    //       labelText: "Menu mode",
+    //       hintText: "country in menu mode",
+    //     ),
+    //   ),
+    //   onChanged: print,
+    //   selectedItem: null,
+    // );
     notifyListeners();
   }
 
@@ -226,12 +224,12 @@ class MainProvider extends ChangeNotifier {
     if (Platform.isWindows || Platform.isLinux) {
       return;
     }
-    _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-      context: context,
-      onCode: (code) async {
-        await searchBarCode(code!);
-      },
-    );
+    // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+    //   context: context,
+    //   onCode: (code) async {
+    //     await searchBarCode(code!);
+    //   },
+    // );
     notifyListeners();
   }
 
@@ -247,13 +245,13 @@ class MainProvider extends ChangeNotifier {
 
   Future<void> openCameraInAddData(BuildContext context) async {
     copys = todoItem;
-    _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
-      context: context,
-      onCode: (code) {
-        barcode.text = code!.toString();
-        notifyListeners();
-      },
-    );
+    // _qrBarCodeScannerDialogPlugin.getScannedQrBarCode(
+    //   context: context,
+    //   onCode: (code) {
+    //     barcode.text = code!.toString();
+    //     notifyListeners();
+    //   },
+    // );
     notifyListeners();
   }
 
