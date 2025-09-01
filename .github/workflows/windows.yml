@@ -1,4 +1,4 @@
-name: Scanner QR Barcode Sqflite existing
+name: on Windos 
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.35.2'
+          flutter-version: '3.32.8'
           
       - name: download packages 
         run: flutter clean
